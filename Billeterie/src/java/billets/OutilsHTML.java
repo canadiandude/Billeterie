@@ -32,7 +32,8 @@ public class OutilsHTML
     
     public void fermerHTML()
     {
-        
+        out.println("</body>");
+        out.println("</html>");
     }
     
     public void produireEntete()
