@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Billetterie</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Billeterie - Salle spectacle">
+        <meta name="keywords" content="theatre, musique, sports, famille, arts">
+                <!-- ****************** GOOGLE FONTS ****************** -->
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+        <style>
+            body{
+                font: 400 18px lato, sans-serif;
+            }
+            .TopMenu {
+                background-color: aquamarine;
+            }
+            table{
+                border-collapse: collapse;                
+            }
+            
+            td{
+                border-style: dashed;
+            }
+            
+            .affiche{
+                width: 100px;
+                height: 150px;                 
+            }
+            .TitreSpectacle{
+                font-weight: bold;
+            }
+            .NomArtiste{
+                
+            }
+            .DateSpectacle{
+                font-style: italic;
+            }
+            .AjouterPanier{
+                text-align: right;
+                padding-right: 20px;
+            }
+            .CBsection{
+                vertical-align: text-top;
+                width: 20%;
+                background-color: aqua;
+            }
+            .SpectacleSection{
+                width: 100%;
+                background-color:white;
+                border-collapse: separate;
+                border-right-style: none;
+                border-left-style: none;
+                border-spacing: 10px;
+            }
+            .Spectacle{
+                background-color:aliceblue;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <table style="width: 100%">
+            <tr class="TopMenu">                    
+                <td>
+                    <img src="http://www.functionkeys.ca/2012Conference/images/MOVIE_TICKETS.png" width="120" height="100">
+                </td>
+                <td>
+                    Login
+                </td>
+            </tr>
+            <tr> 
+                <td class="CBsection">
+                    Check Box </br>            
+                    <input type="checkbox" name="salle" value="CentreBell">Centre Bell</br>
+                    <input type="checkbox" name="salle" value="SaintDenis" checked>Saint-Denis</br>
+            
+                </td>
+                <td>
+                    <table class="SpectacleSection">
+                        <!-- Affichage des représentations -->
+                        <tr class="Spectacle">
+                            <td style="width: 100px" >
+                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
+                            </td>
+                            <td>
+                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
+                                <div class="NomArtiste">Roger Waters</div>
+                                <div class="DateSpectacle">16 decembre 2016</div>
+                                <div class="AjouterPanier">
+                                    <input type="submit" value="Ajouter au panier" id="repID">
+                                </div>
+                                
+                            </td>                            
+                        </tr>
+                        <tr class="Spectacle">
+                            <td>
+                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
+                            </td>
+                            <td>
+                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
+                                <div class="NomArtiste">Roger Waters</div>
+                                <div class="DateSpectacle">16 decembre 2016</div>
+                                <div class="AjouterPanier">
+                                    <input type="submit" value="Ajouter au panier" id="repID">
+                                </div>
+                            </td>                            
+                        </tr>
+                        <tr class="Spectacle">
+                            <td>
+                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
+                            </td>
+                            <td>
+                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
+                                <div class="NomArtiste">Roger Waters</div>
+                                <div class="DateSpectacle">16 decembre 2016</div>
+                                <div class="AjouterPanier">
+                                    <input type="submit" value="Ajouter au panier" id="repID">
+                                </div>
+                            </td>                            
+                        </tr>
+                        <tr class="Spectacle">
+                            <td>
+                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
+                            </td>
+                            <td>
+                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
+                                <div class="NomArtiste">Roger Waters</div>
+                                <div class="DateSpectacle">16 decembre 2016</div>
+                                <div class="AjouterPanier">
+                                    <input type="submit" value="Ajouter au panier" id="repID">
+                                </div>
+                            </td>                            
+                        </tr>
+                        <!-- Fin de l'Affichage des représentations -->
+                    </table>
+                </td>
+            </tr>
+
+        </table>
+    </body>
+</html>
