@@ -39,8 +39,8 @@ public class OutilsHTML
     
     private void produireEntete()
     {
-        String url = "/Billeterie/Authentification";
-        out.println("<a href='" + url + "'>Connexion</a>");
+        out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
+        out.println("<a href='/Billeterie/Panier'>Panier</a>");
         out.println("<hr />");
     }
     

@@ -7,11 +7,14 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import oracle.jdbc.OracleTypes;
+import oracle.jdbc.oracore.OracleType;
 
 /**
  *
@@ -61,19 +64,43 @@ public class Authentification extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-                response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter())
         {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Authentification</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Authentification at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            int existe = 0;
+            try
+            {
+                ConnexionOracle bd = new ConnexionOracle();
+                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AUTHENTIFIER(?,?) }");
+                callstm.registerOutParameter(1, OracleTypes.NUMBER);
+                callstm.setString(2, request.getParameter("email"));
+                callstm.setString(3, request.getParameter("mdp"));
+                callstm.execute();
+                existe = callstm.getInt(1);
+                callstm.close();
+                bd.deconnecter();
+            }
+            catch ( SQLException sqle )
+            {
+                out.println("erreur de bd");
+            }
+            
+            OutilsHTML html = new OutilsHTML(out);
+            html.ouvrirHTML();
+            
+            if (existe != 0)
+            {
+                out.println("YES");
+                request.getSession().setAttribute("client", request.getParameter("email"));
+            }
+                
+            else
+            {
+                out.println("<h1 style=\"color: red\">Courriel/Mot de passe invalide !</h1>");
+                html.produireFormAuthentification();
+            }
+            
+            html.fermerHTML();
         }
     }
 
