@@ -39,13 +39,12 @@ public class Recherche extends HttpServlet
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter())
         {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Recherche</title>");            
-            out.println("</head>");
-            out.println("<body>");
+            OutilsHTML html = new OutilsHTML(out);
+            
+            html.ouvrirHTML();
+            
+            html.produireEntete();
+            
             out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
             try
             {
@@ -58,8 +57,7 @@ public class Recherche extends HttpServlet
                out.println("FAILURE !!!!"); 
             }
             
-            out.println("</body>");
-            out.println("</html>");
+            html.fermerHTML();
         }
     }
 
