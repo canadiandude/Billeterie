@@ -28,6 +28,7 @@ public class OutilsHTML
         out.println("<title>Servlet Recherche</title>");            
         out.println("</head>");
         out.println("<body>");
+        produireEntete();
     }
     
     public void fermerHTML()
@@ -36,9 +37,29 @@ public class OutilsHTML
         out.println("</html>");
     }
     
-    public void produireEntete()
+    private void produireEntete()
     {
-        out.println("<h1>This is a header</h1>");
+        String url = "/Billeterie/Authentification";
+        out.println("<a href='" + url + "'>Connexion</a>");
         out.println("<hr />");
+    }
+    
+    public void produireFormAuthentification()
+    {
+        out.println("<form method=\"post\" action=\"Authentification\">");
+        out.println("<table>");
+        out.println("<tr>");
+        out.println("<td>Courriel</td>");
+        out.println("<td><input type=\"text\" name=\"email\"></td>");
+        out.println("</tr>");
+        out.println("<tr>");
+        out.println("<td>Mot de passe</td>");
+        out.println("<td><input type=\"password\" name=\"mdp\"></td>");
+        out.println("</tr>");
+        out.println("<tr>");
+        out.println("<td></td><td><input type=\"submit\" value=\"Connexion\"></td>");
+        out.println("</tr>");
+        out.println("</table>");        
+        out.println("</form>");
     }
 }

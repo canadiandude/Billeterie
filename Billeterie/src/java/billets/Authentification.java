@@ -17,47 +17,12 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Francois
  */
-@WebServlet(name = "Recherche", urlPatterns =
+@WebServlet(name = "Authentification", urlPatterns =
 {
-    "/Recherche"
+    "/Authentification"
 })
-public class Recherche extends HttpServlet
+public class Authentification extends HttpServlet
 {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter())
-        {
-            OutilsHTML html = new OutilsHTML(out);
-            
-            html.ouvrirHTML();
-            
-            out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            try
-            {
-                ConnexionOracle ora = new ConnexionOracle();
-                out.println("SUCCESS !!!!");
-                ora.deconnecter();
-            }
-            catch (Exception e)
-            {
-               out.println("FAILURE !!!!"); 
-            }
-            
-            html.fermerHTML();
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -72,7 +37,16 @@ public class Recherche extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter())
+        {
+            OutilsHTML html = new OutilsHTML(out);
+            html.ouvrirHTML();
+            
+            html.produireFormAuthentification();
+            
+            html.fermerHTML();
+        }
     }
 
     /**
@@ -87,7 +61,20 @@ public class Recherche extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        processRequest(request, response);
+                response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter())
+        {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Authentification</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet Authentification at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     /**
