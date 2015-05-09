@@ -9,17 +9,19 @@
 		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
         <style>
             body{
-                font: 400 18px lato, sans-serif;
+                font: 500 18px lato, sans-serif;
+                background-color: rgb(237,237,237);
             }
             .TopMenu {
-                background-color: aquamarine;
+                background-color: rgb(198,221,237);
+                height: 150px;
             }
             table{
                 border-collapse: collapse;                
             }
             
             td{
-                border-style: dashed;
+                //border-style: dashed;
             }
             
             .affiche{
@@ -41,19 +43,26 @@
             }
             .CBsection{
                 vertical-align: text-top;
-                width: 20%;
-                background-color: aqua;
+                width: 15%;
+                padding-left: 25px;
+                padding-top: 25px;
+                background-color: rgb(220, 228, 234);
+            }
+            .TitreCB{
+                color: rgb(152,153,167);
+                font-weight: 800;
+                font-size: 20px;
             }
             .SpectacleSection{
                 width: 100%;
-                background-color:white;
+                background-color: rgb(237,237,237);
                 border-collapse: separate;
                 border-right-style: none;
                 border-left-style: none;
                 border-spacing: 10px;
             }
             .Spectacle{
-                background-color:aliceblue;
+                background-color: white;
             }
         </style>
         
@@ -62,18 +71,46 @@
         <table style="width: 100%">
             <tr class="TopMenu">                    
                 <td>
-                    <img src="http://www.functionkeys.ca/2012Conference/images/MOVIE_TICKETS.png" width="120" height="100">
+                    <img style="display: block;
+                                margin-left: auto;
+                                margin-right: auto" src="http://www.functionkeys.ca/2012Conference/images/MOVIE_TICKETS.png" width="240" height="200">
                 </td>
                 <td>
-                    Login
+                    <table style="width: 100%">
+                        <tr>
+                            <td>
+                                tourtière
+                            </td>
+                            <td>
+                                tourtière
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                tourtière
+                            </td>
+                            <td>
+                                tourtière
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr> 
                 <td class="CBsection">
-                    Check Box </br>            
-                    <input type="checkbox" name="salle" value="CentreBell">Centre Bell</br>
+                    <div class="TitreCB">TYPE DE SPECTACLE</div>                    
+                    <input type="checkbox" name="salle" value="Musique">Musique</br>
+                    <input type="checkbox" name="salle" value="Sports" checked>Sports</br>
+                    <input type="checkbox" name="salle" value="ArtEtTheatre" checked>Arts & Théâtre</br>
+                    <input type="checkbox" name="salle" value="Famille" checked>Famille</br>
+                    <input type="checkbox" name="salle" value="Festivals" checked>Festivals</br>
+                    <input type="checkbox" name="salle" value="Humour" checked>Humour</br>
+                    </br>            
+                    <hr style="width:70%" align="left"></hr>                    
+                    <div class="TitreCB">SALLE DE SPECTACLE</div> 
                     <input type="checkbox" name="salle" value="SaintDenis" checked>Saint-Denis</br>
-            
+                    <input type="checkbox" name="salle" value="CentreBell">Centre Bell</br>                    
+                    <input type="checkbox" name="salle" value="Zenith">Le Zénith</br>  
                 </td>
                 <td>
                     <table class="SpectacleSection">
@@ -92,45 +129,7 @@
                                 
                             </td>                            
                         </tr>
-                        <tr class="Spectacle">
-                            <td>
-                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
-                            </td>
-                            <td>
-                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
-                                <div class="NomArtiste">Roger Waters</div>
-                                <div class="DateSpectacle">16 decembre 2016</div>
-                                <div class="AjouterPanier">
-                                    <input type="submit" value="Ajouter au panier" id="repID">
-                                </div>
-                            </td>                            
-                        </tr>
-                        <tr class="Spectacle">
-                            <td>
-                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
-                            </td>
-                            <td>
-                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
-                                <div class="NomArtiste">Roger Waters</div>
-                                <div class="DateSpectacle">16 decembre 2016</div>
-                                <div class="AjouterPanier">
-                                    <input type="submit" value="Ajouter au panier" id="repID">
-                                </div>
-                            </td>                            
-                        </tr>
-                        <tr class="Spectacle">
-                            <td>
-                                <img class="affiche" src="http://www.neptunepinkfloyd.co.uk/images/news/2010/roger-waters-tour/Roger-Waters-The-Wall-Live-Tour-Poster-Hi-Res.jpg">
-                            </td>
-                            <td>
-                                <div class="TitreSpectacle">Roger Waters The Wall</div><br>
-                                <div class="NomArtiste">Roger Waters</div>
-                                <div class="DateSpectacle">16 decembre 2016</div>
-                                <div class="AjouterPanier">
-                                    <input type="submit" value="Ajouter au panier" id="repID">
-                                </div>
-                            </td>                            
-                        </tr>
+
                         <!-- Fin de l'Affichage des représentations -->
                     </table>
                 </td>
