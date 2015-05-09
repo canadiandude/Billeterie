@@ -47,10 +47,10 @@ public class Panier extends HttpServlet
                 out.println((String) request.getSession().getAttribute("client"));
                 html.fermerHTML();
             }
-        } else
+        } 
+        else
         {
-            RequestDispatcher rd = request.getRequestDispatcher("Authentification");
-            rd.forward(request, response);
+            response.sendRedirect("Authentification");
         }
 
     }
