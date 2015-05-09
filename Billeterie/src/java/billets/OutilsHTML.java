@@ -6,6 +6,8 @@
 package billets;
 
 import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -61,5 +63,37 @@ public class OutilsHTML
         out.println("</tr>");
         out.println("</table>");        
         out.println("</form>");
+    }
+
+    public static String afficherPanier(String client, ResultSet rst) throws SQLException
+    {
+        String tableau = "<table>";
+        
+        while (rst.next())
+        {
+            tableau += "<tr>";
+            tableau += "<td rowspan=\"4\"><img src=\"" + rst.getString("AFFICHE") + "\" style=\"height:128px\"></img></td>";
+            tableau += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
+            tableau += "<td rowspan=\"2\"><input type=\"number\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
+            tableau += "</tr>";
+            
+            tableau += "<tr>";
+            String date = rst.getObject("DATEDEBUT").toString();
+            date = date.substring(0, date.indexOf(" "));
+            tableau += "<td>" + date + "</td>";
+            tableau += "</tr>";
+            
+            tableau += "<tr>";
+            tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
+            tableau += "<td rowspan=\"2\">"+ rst.getInt("SOUSTOTAL") +" $</td>";
+            tableau += "</tr>";
+            
+            tableau += "</tr>";
+            tableau += "<td>" + rst.getString("NOMSECTION") + "(" + rst.getInt("PRIXSECTION") +"$)" + "</td>";
+            tableau += "</tr>";
+        }
+        
+        tableau += "</table>";
+        return tableau;
     }
 }

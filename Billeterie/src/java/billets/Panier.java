@@ -7,12 +7,15 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import oracle.jdbc.OracleTypes;
 
 /**
  *
@@ -37,18 +40,34 @@ public class Panier extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        if (request.getSession().getAttribute("client") != null)
+        String client = (String) request.getSession().getAttribute("client");
+        String tableau = "<h1>Une erreur est survenue</h1>";
+        if (client != null)
         {
+            try
+            {
+                ConnexionOracle bd = new ConnexionOracle();
+                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_PANIER(?) }");
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);
+                callstm.setString(2, client);
+                callstm.execute();
+                tableau = OutilsHTML.afficherPanier(client, (ResultSet)callstm.getObject(1));
+                callstm.close();
+                bd.deconnecter();
+            } catch (SQLException sqle)
+            {
+                response.sendRedirect("erreur.html");
+            }
+
             response.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = response.getWriter())
             {
                 OutilsHTML html = new OutilsHTML(out);
                 html.ouvrirHTML();
-                out.println((String) request.getSession().getAttribute("client"));
+                out.println(tableau);
                 html.fermerHTML();
             }
-        } 
-        else
+        } else
         {
             response.sendRedirect("Authentification");
         }
