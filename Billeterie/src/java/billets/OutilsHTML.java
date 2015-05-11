@@ -28,6 +28,7 @@ public class OutilsHTML
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Servlet Recherche</title>");
+        out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">");
         out.println("</head>");
         out.println("<body>");
         produireEntete();
@@ -102,7 +103,7 @@ public class OutilsHTML
         out.println("<script src=\"fonctions.js\"></script>");
         out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
         out.println(panier);
-        out.println("<input id=\"submitPanier\" type=\"submit\" value=\"Payer\">");
+        out.println("<input id=\"submitPanier\" class=\"btn_payer\" type=\"submit\" value=\"Payer\">");
         out.println("</form>");
     }
 }
