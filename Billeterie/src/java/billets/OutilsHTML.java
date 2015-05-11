@@ -42,8 +42,10 @@ public class OutilsHTML
     
     private void produireEntete()
     {
+        out.println("<div class=\"TopMenu\">");
         out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
         out.println("<a href='/Billeterie/Panier'>Panier</a>");
+        out.println("</div>");
         out.println("<hr />");
     }
     
@@ -68,14 +70,15 @@ public class OutilsHTML
 
     public static String produireTableauPanier(String client, ResultSet rst) throws SQLException
     {
-        String tableau = "<table>";
+        String tableau = "";
         
         while (rst.next())
         {
+            tableau += "<table class=\"PanierItem\">";
             tableau += "<tr>";
-            tableau += "<td rowspan=\"4\"><img src=\"" + rst.getString("AFFICHE") + "\" style=\"height:128px\"></img></td>";
+            tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
             tableau += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
-            tableau += "<td rowspan=\"2\"><input type=\"number\" name=\"" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
+            tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br /> <input type=\"number\" name=\"" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
             tableau += "</tr>";
             
             tableau += "<tr>";
@@ -86,15 +89,16 @@ public class OutilsHTML
             
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
-            tableau += "<td rowspan=\"2\">"+ rst.getInt("SOUSTOTAL") +" $</td>";
+            tableau += "<td rowspan=\"2\" align=\"center\">Sous-total <br />"+ rst.getInt("SOUSTOTAL") +" $</td>";
             tableau += "</tr>";
             
-            tableau += "</tr>";
+            tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSECTION") + "(" + rst.getInt("PRIXSECTION") +"$)" + "</td>";
             tableau += "</tr>";
+            tableau += "</table>";
         }
         
-        tableau += "</table>";
+
         return tableau;
     }
     
