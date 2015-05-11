@@ -27,7 +27,7 @@ public class OutilsHTML
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet Recherche</title>");            
+        out.println("<title>Servlet Recherche</title>");
         out.println("</head>");
         out.println("<body>");
         produireEntete();
@@ -65,7 +65,7 @@ public class OutilsHTML
         out.println("</form>");
     }
 
-    public static String afficherPanier(String client, ResultSet rst) throws SQLException
+    public static String produireTableauPanier(String client, ResultSet rst) throws SQLException
     {
         String tableau = "<table>";
         
@@ -74,12 +74,12 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img src=\"" + rst.getString("AFFICHE") + "\" style=\"height:128px\"></img></td>";
             tableau += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
-            tableau += "<td rowspan=\"2\"><input type=\"number\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
+            tableau += "<td rowspan=\"2\"><input type=\"number\" onchange=\"SetUpdate();\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
             tableau += "</tr>";
             
             tableau += "<tr>";
             String date = rst.getObject("DATEDEBUT").toString();
-            date = date.substring(0, date.indexOf(" "));
+            date = date.substring(0, date.lastIndexOf(":"));
             tableau += "<td>" + date + "</td>";
             tableau += "</tr>";
             
@@ -95,5 +95,14 @@ public class OutilsHTML
         
         tableau += "</table>";
         return tableau;
+    }
+    
+    public void afficherPanier(String panier)
+    {
+        out.println("<script src=\"fonctions.js\"></script>");
+        out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
+        out.println(panier);
+        out.println("<input id=\"submitPanier\" type=\"submit\" value=\"Payer\">");
+        out.println("</form>");
     }
 }

@@ -7,25 +7,21 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import oracle.jdbc.OracleTypes;
 
 /**
  *
  * @author Francois
  */
-@WebServlet(name = "Panier", urlPatterns =
+@WebServlet(name = "Facture", urlPatterns =
 {
-    "/Panier"
+    "/Facture"
 })
-public class Panier extends HttpServlet
+public class Facture extends HttpServlet
 {
 
     /**
@@ -40,38 +36,14 @@ public class Panier extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        String client = (String) request.getSession().getAttribute("client");
-        String tableau = "<h1>Une erreur est survenue</h1>";// Message par défaut
-        if (client != null)
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter())
         {
-            try
-            {
-                ConnexionOracle bd = new ConnexionOracle();
-                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_PANIER(?) }");
-                callstm.registerOutParameter(1, OracleTypes.CURSOR);
-                callstm.setString(2, client);
-                callstm.execute();
-                tableau = OutilsHTML.produireTableauPanier(client, (ResultSet)callstm.getObject(1));
-                callstm.close();
-                bd.deconnecter();
-            } catch (SQLException sqle)
-            {
-                response.sendRedirect("erreur.html");
-            }
-
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter())
-            {
-                OutilsHTML html = new OutilsHTML(out);
-                html.ouvrirHTML();
-                html.afficherPanier(tableau);
-                html.fermerHTML();
-            }
-        } else
-        {
-            response.sendRedirect("Authentification");
+            OutilsHTML html = new OutilsHTML(out);
+            html.ouvrirHTML();
+            out.println("Payer");
+            html.fermerHTML();
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
