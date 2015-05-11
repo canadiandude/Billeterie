@@ -74,7 +74,7 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img src=\"" + rst.getString("AFFICHE") + "\" style=\"height:128px\"></img></td>";
             tableau += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
-            tableau += "<td rowspan=\"2\"><input type=\"number\" onchange=\"SetUpdate();\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
+            tableau += "<td rowspan=\"2\"><input type=\"number\" name=\"" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\""+ rst.getInt("QUANTITEBILLETS") +"\"></td>";
             tableau += "</tr>";
             
             tableau += "<tr>";

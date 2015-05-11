@@ -51,7 +51,7 @@ public class Panier extends HttpServlet
                 callstm.registerOutParameter(1, OracleTypes.CURSOR);
                 callstm.setString(2, client);
                 callstm.execute();
-                tableau = OutilsHTML.produireTableauPanier(client, (ResultSet)callstm.getObject(1));
+                tableau = OutilsHTML.produireTableauPanier(client, (ResultSet) callstm.getObject(1));
                 callstm.close();
                 bd.deconnecter();
             } catch (SQLException sqle)
@@ -71,7 +71,37 @@ public class Panier extends HttpServlet
         {
             response.sendRedirect("Authentification");
         }
+    }
 
+    private void mettreAJourPanier(HttpServletRequest request, HttpServletResponse response)
+            throws IOException
+    {
+        try
+        {
+            String client = (String)request.getSession().getAttribute("client");
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callList = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_PANIER(?) }");
+            callList.registerOutParameter(1, OracleTypes.CURSOR);
+            callList.setString(2, client);
+            callList.execute();
+            ResultSet rst = (ResultSet) callList.getObject(1);
+            
+            while (rst.next())
+            {
+                CallableStatement callUpdate = bd.prepareCall("{ call PKG_BILLETS.UPDATE_QUANTITE_ACHATS(?,?) }");
+                int numachat = rst.getInt("NUMACHAT");
+                callUpdate.setInt(1, numachat);
+                int qte = Integer.parseInt(request.getParameter(""+numachat));
+                callUpdate.setInt(2, qte);
+                callUpdate.execute();
+            }
+
+            callList.close();
+            bd.deconnecter();
+        } catch (SQLException sqle)
+        {
+            response.sendRedirect("erreur.html");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -102,6 +132,7 @@ public class Panier extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        mettreAJourPanier(request, response);
         processRequest(request, response);
     }
 
