@@ -101,9 +101,11 @@ public class OutilsHTML
     public void afficherPanier(String panier)
     {
         out.println("<script src=\"fonctions.js\"></script>");
+        out.println("<div class=\"framePanier\">");
         out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
         out.println(panier);
         out.println("<input id=\"submitPanier\" class=\"btn_payer\" type=\"submit\" value=\"Payer\">");
         out.println("</form>");
+        out.println("</div>");        
     }
 }
