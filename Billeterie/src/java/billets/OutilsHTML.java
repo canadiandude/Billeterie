@@ -80,8 +80,7 @@ public class OutilsHTML
 "                    </table>\n" +
 "                </td>\n" +
 "            </tr>");
-        out.println("</table>");
-        out.println("<hr />");
+        out.println("</table>");        
     }
     
     public void produireFormAuthentification()
@@ -146,5 +145,56 @@ public class OutilsHTML
         out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
         out.println("</form>");
         out.println("</div>");        
+    }
+    
+    public static String produireTableauRecherche(ResultSet rstRep) throws SQLException
+    {   
+        //CheckBox
+        String page = "<table style=\"width: 100%\">\n" +
+"            <tr> \n" +
+"                <td class=\"CBsection\">\n" +
+"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Musique\">Musique</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Sports\" checked>Sports</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"ArtEtTheatre\" checked>Arts & Théâtre</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Famille\" checked>Famille</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Festivals\" checked>Festivals</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Humour\" checked>Humour</br>\n" +
+"                    </br>\n" +
+"                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
+"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div> \n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"SaintDenis\" checked>Saint-Denis</br>\n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"CentreBell\">Centre Bell</br>                    \n" +
+"                    <input type=\"checkbox\" name=\"salle\" value=\"Zenith\">Le Zénith</br></br>\n" +
+"                </td>\n" +
+"                <td>\n" +
+"                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n" +
+"                    <table class=\"SpectacleSection\">\n" +
+"                        <!-- Affichage des représentations -->";
+        //Representation
+        page += "       <form>\n" +
+"                            <tr class=\"Spectacle\">\n" +
+"                                <td style=\"width: 100px\" >\n" +
+"                                    <img class=\"affiche\" src=\"http://i.imgur.com/5psUhz1.jpg\">\n" +
+"                                </td>\n" +
+"                                <td>\n" +
+"                                    <div class=\"TitreSpectacle\">Roger Waters The Wall</div><br>\n" +
+"                                    <div class=\"NomArtiste\">Roger Waters</div>\n" +
+"                                    <div class=\"SalleSpectacle\">Centre Bell</div>\n" +
+"                                    <div class=\"DateSpectacle\">16 decembre 2016</div>\n" +
+"                                    <div class=\"AjouterPanier\">\n" +
+"                                        <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n" +
+"                                        <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n" +
+"                                    </div>\n" +
+"                                </td>\n" +
+"                            </tr>\n" +
+"                        </form>";
+        //Fermeture de representation
+        page += "       </table>\n" +
+"                    </div>\n" +
+"                </td>\n" +
+"            </tr>\n" +
+"        </table>";
+        return page;
     }
 }

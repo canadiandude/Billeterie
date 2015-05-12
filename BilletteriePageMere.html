@@ -87,7 +87,7 @@
                 border-collapse: separate;
                 border-right-style: none;
                 border-left-style: none;
-                border-spacing: 10px;
+                border-spacing: 10px;                
             }
             .Spectacle{
                 background-color: white;
@@ -130,6 +130,9 @@
                     </table>
                 </td>
             </tr>
+			</table>
+			
+			<table style="width: 100%">					
             <tr> 
                 <td class="CBsection">
                     <div class="TitreCB">TYPE DE SPECTACLE</div>                    
@@ -147,10 +150,11 @@
                     <input type="checkbox" name="salle" value="Zenith">Le Zénith</br></br>
                 </td>
                 <td>
+                    <div style="height: 70vh; overflow:auto;"><!-- Scroll bar representation -->
                     <table class="SpectacleSection">
-                        
-                        
                         <!-- Affichage des représentations -->
+                        
+                        
                         <form>
                             <tr class="Spectacle">
                                 <td style="width: 100px" >
@@ -170,65 +174,15 @@
                             </tr>
                         </form>
                         <!-- Fin de l'Affichage des représentations -->
-                        <form>
-                            <tr class="Spectacle">
-                                <td style="width: 100px" >
-                                    <img class="affiche" src="http://i.imgur.com/5psUhz1.jpg">
-                                </td>
-                                <td>
-                                    <div class="TitreSpectacle">Roger Waters The Wall</div><br>                                
-                                    <div class="NomArtiste">Roger Waters</div>
-                                    <div class="SalleSpectacle">Centre Bell</div>
-                                    <div class="DateSpectacle">16 decembre 2016</div>
-                                    <div class="AjouterPanier">
-                                        <input type="submit" value="Ajouter au panier" id="repID">
-                                        <!-- input type="hidden" value="" name="representation" -->
-                                    </div>
 
-                                </td>                            
-                            </tr>
-                        </form>
-                        <form>
-                            <tr class="Spectacle">
-                                <td style="width: 100px" >
-                                    <img class="affiche" src="http://i.imgur.com/5psUhz1.jpg">
-                                </td>
-                                <td>
-                                    <div class="TitreSpectacle">Roger Waters The Wall</div><br>                                
-                                    <div class="NomArtiste">Roger Waters</div>
-                                    <div class="SalleSpectacle">Centre Bell</div>
-                                    <div class="DateSpectacle">16 decembre 2016</div>
-                                    <div class="AjouterPanier">
-                                        <input type="submit" value="Ajouter au panier" id="repID">
-                                        <!-- input type="hidden" value="" name="representation" -->
-                                    </div>
 
-                                </td>                            
-                            </tr>
-                        </form>
-                        <form>
-                            <tr class="Spectacle">
-                                <td style="width: 100px" >
-                                    <img class="affiche" src="http://i.imgur.com/5psUhz1.jpg">
-                                </td>
-                                <td>
-                                    <div class="TitreSpectacle">Roger Waters The Wall</div><br>                                
-                                    <div class="NomArtiste">Roger Waters</div>
-                                    <div class="SalleSpectacle">Centre Bell</div>
-                                    <div class="DateSpectacle">16 decembre 2016</div>
-                                    <div class="AjouterPanier">
-                                        <input type="submit" value="Ajouter au panier" id="repID">
-                                        <!-- input type="hidden" value="" name="representation" -->
-                                    </div>
 
-                                </td>                            
-                            </tr>
-                        </form>
+
                         <!-- Fin de l'Affichage des représentations -->
                     </table>
+                    </div>
                 </td>
             </tr>
-
         </table>
     </body>
 </html>

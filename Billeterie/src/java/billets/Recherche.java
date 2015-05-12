@@ -5,8 +5,10 @@
  */
 package billets;
 
+import static billets.OutilsHTML.produireTableauRecherche;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,9 +45,16 @@ public class Recherche extends HttpServlet
             
             html.ouvrirHTML();
             
-            out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            out.println(request.getParameter("recherche"));
-            
+            try
+            {
+               out.println(produireTableauRecherche(null)); 
+            }
+            catch (SQLException ex)
+            {
+
+            }            
+            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
+            //out.println(request.getParameter("recherche"));            
             html.fermerHTML();
         }
     }
