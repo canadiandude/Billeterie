@@ -44,16 +44,7 @@ public class Recherche extends HttpServlet
             html.ouvrirHTML();
             
             out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            try
-            {
-                ConnexionOracle ora = new ConnexionOracle();
-                out.println("SUCCESS !!!!");
-                ora.deconnecter();
-            }
-            catch (Exception e)
-            {
-               out.println("FAILURE !!!!"); 
-            }
+            out.println(request.getParameter("recherche"));
             
             html.fermerHTML();
         }

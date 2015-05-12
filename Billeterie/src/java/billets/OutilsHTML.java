@@ -29,6 +29,8 @@ public class OutilsHTML
         out.println("<head>");
         out.println("<title>Servlet Recherche</title>");
         out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">");
+        out.println("<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>\n" +
+"        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>");
         out.println("</head>");
         out.println("<body>");
         produireEntete();
@@ -42,10 +44,43 @@ public class OutilsHTML
     
     private void produireEntete()
     {
-        out.println("<div class=\"TopMenu\">");
-        out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
-        out.println("<a href='/Billeterie/Panier'>Panier</a>");
-        out.println("</div>");
+        out.println("<table class=\"TopMenu\" width=\"100%\">");
+        //out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
+        //out.println("<a href='/Billeterie/Panier'>Panier</a>");
+        out.println("<tr class=\"TopMenu\">                    \n" +
+"                <td>\n" +
+"                    <img style=\"display: block;\n" +
+"                                margin-left: auto;\n" +
+"                                margin-right: auto\" src=\"http://www.functionkeys.ca/2012Conference/images/MOVIE_TICKETS.png\" width=\"240\" height=\"200\">\n" +
+"                </td>\n" +
+"                <td>\n" +
+"                    <table style=\"width: 100%\">\n" +
+"                        <tr>\n" +
+"                            <td class=\"MenuTopGauche\">\n" +
+"                                <div class=\"TiteSite\">Billetterie Express .com</div>\n" +
+"                            </td>\n" +
+"                            <td class=\"MenuTopDroite\">\n" +
+"                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n" +
+"                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\">Inscription</a>\n" +
+"                            </td>\n" +
+"                        </tr>\n" +
+"                        <tr>\n" +
+"                            <td class=\"MenuTopGauche\">\n" +
+"                               <form action=\"/Billeterie/Recherche\">\n"+
+"                                   <input class=\"css-input\" type=\"text\" name=\"recherche\">\n" +
+"                                   <input type=\"image\" align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\">\n" +
+"                               </form>\n"+
+"                            </td>\n" +
+"                            <td class=\"MenuTopDroite\">\n" +
+"                                <a href=\"/Billeterie/Panier\" style=\"padding-right: 40px;\">\n" +
+"                                    <img style=\"padding-top: 5px;\" height=\"75px\" width=\"75px\" src=\"http://i.imgur.com/YVYxaUu.png\">\n" +
+"                                </a>\n" +
+"                            </td>\n" +
+"                        </tr>\n" +
+"                    </table>\n" +
+"                </td>\n" +
+"            </tr>");
+        out.println("</table>");
         out.println("<hr />");
     }
     
@@ -62,7 +97,7 @@ public class OutilsHTML
         out.println("<td><input type=\"password\" name=\"mdp\"></td>");
         out.println("</tr>");
         out.println("<tr>");
-        out.println("<td></td><td><input type=\"submit\" value=\"Connexion\"></td>");
+        out.println("<td></td><td><input type=\"submit\" class=\"BoutonVert\" value=\"Connexion\" style=\"margin-top:5px\"></td>");
         out.println("</tr>");
         out.println("</table>");        
         out.println("</form>");
@@ -105,10 +140,10 @@ public class OutilsHTML
     public void afficherPanier(String panier)
     {
         out.println("<script src=\"fonctions.js\"></script>");
-        out.println("<div class=\"framePanier\">");
+        out.println("<div class=\"framePanier\" align=\"center\">");
         out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
         out.println(panier);
-        out.println("<input id=\"submitPanier\" class=\"btn_payer\" type=\"submit\" value=\"Payer\">");
+        out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
         out.println("</form>");
         out.println("</div>");        
     }
