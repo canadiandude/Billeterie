@@ -6,8 +6,10 @@
 package billets;
 
 import java.io.*;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import oracle.jdbc.OracleTypes;
 
 /**
  *
@@ -113,7 +115,9 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
             tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
-            tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br /> <input type=\"number\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
+            tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br />";
+            tableau += "<input type=\"number\" min=\"0\" max=\"" + compterPlacesDispo(rst.getInt("QUANTITEBILLETS"), rst.getInt("CODEREPRESENTATION"), rst.getInt("CODESECTION"))
+                    + "\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
             tableau += "</tr>";
 
             tableau += "<tr>";
@@ -147,6 +151,22 @@ public class OutilsHTML
         return tableau;
     }
 
+    private static int compterPlacesDispo(int quantite, int rep, int section)
+            throws SQLException
+    {
+        int places = quantite;
+        ConnexionOracle bd = new ConnexionOracle();
+        CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.PLACES_DISPO(?,?) }");
+        callstm.registerOutParameter(1, OracleTypes.NUMBER);
+        callstm.setInt(2, rep);
+        callstm.setInt(3, section);
+        callstm.execute();
+        places += callstm.getInt(1);
+        callstm.close();
+        bd.deconnecter();
+        return places;
+    }
+
     public void afficherPanier(String panier)
     {
         out.println("<script src=\"fonctions.js\"></script>");
@@ -157,9 +177,10 @@ public class OutilsHTML
             out.println(panier);
             out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
             out.println("</form>");
-        }
-        else
+        } else
+        {
             out.println("Votre panier est vide");
+        }
         out.println("</div>");
     }
 
