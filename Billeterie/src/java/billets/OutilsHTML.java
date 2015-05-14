@@ -241,15 +241,48 @@ public class OutilsHTML
     
     public static String ConstruireCBsection()
     {
-        String CbSection = "<td class=\"CBsection\">\n" +
-"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n" +
-                      ecrireCheckBox("test",true) + 
-"                    </br>\n" +
+        //ResultSet restSalles = null;
+        //ResultSet restCategories = null;
+        String CbSection = "";
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
+            callstm.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm.execute();
+            ResultSet restSalles = (ResultSet) callstm.getObject(1);
+            //callstm.close();
+            
+            CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
+            callstm2.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm2.execute();
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);
+            //callstm2.close();
+            //bd.deconnecter();                 
+
+        CbSection = "<td class=\"CBsection\">\n" +
+"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
+        while (restCategories.next())
+        {
+            CbSection += ecrireCheckBox(restCategories.getString(2),false) +"</br>";
+        }           
+        CbSection +="</br>\n" +
 "                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
-"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n" +
-                     ecrireCheckBox("test2",false) +
-                "</br>\n" +
+"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
+        while (restSalles.next())
+        {
+            CbSection += ecrireCheckBox(restSalles.getString(2),false) +"</br>";
+        }
+        CbSection += "</br>\n" +
 "                </td>";
+        callstm.close();
+        callstm2.close();
+        bd.deconnecter();
+        }
+        catch (SQLException ex)
+        {
+            CbSection += ex.getMessage();
+        } 
         return CbSection;
     }
     
