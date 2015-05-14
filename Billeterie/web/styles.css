@@ -113,6 +113,16 @@ input[type=number]{
     padding-top: 5px;
 }
 
+.LoginForm {
+    margin: auto;
+    margin-top: 20px;
+}
+
+.LoginForm tr:last-child td:last-child {
+    padding-top: 5px;
+    text-align: center;
+}
+
 .BoutonVert {
 	-moz-box-shadow: 0px 0px 0px 2px #3dc21b;
 	-webkit-box-shadow: 0px 0px 0px 2px #3dc21b;

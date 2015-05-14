@@ -34,6 +34,7 @@ public class OutilsHTML
         out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">");
         out.println("<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>\n"
                 + "        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>");
+        out.println("<script src=\"fonctions.js\"></script>");
         out.println("</head>");
         out.println("<body>");
         produireEntete();
@@ -64,7 +65,7 @@ public class OutilsHTML
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
                 + "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
-                + "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\">Inscription</a>\n"
+                + "                                <a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n"
                 + "                            </td>\n"
                 + "                        </tr>\n"
                 + "                        <tr>\n"
@@ -89,7 +90,7 @@ public class OutilsHTML
     public void produireFormAuthentification()
     {
         out.println("<form method=\"post\" action=\"Authentification\">");
-        out.println("<table>");
+        out.println("<table class=\"LoginForm\">");
         out.println("<tr>");
         out.println("<td>Courriel</td>");
         out.println("<td><input type=\"text\" name=\"email\"></td>");
@@ -99,10 +100,27 @@ public class OutilsHTML
         out.println("<td><input type=\"password\" name=\"mdp\"></td>");
         out.println("</tr>");
         out.println("<tr>");
-        out.println("<td></td><td><input type=\"submit\" class=\"BoutonVert\" value=\"Connexion\" style=\"margin-top:5px\"></td>");
+        out.println("<td></td><td><input type=\"submit\" class=\"BoutonVert\" value=\"Connexion\"></td>");
         out.println("</tr>");
         out.println("</table>");
         out.println("</form>");
+    }
+
+    public void produireFormInscription()
+    {
+        out.println(""
+                + "<form method=\"post\" action=\"Inscription\">\n"
+                + "     <table class=\"LoginForm\">\n"
+                + "		<tr><td><label for=\"email\">Courriel</label></td><td><input type=\"text\" name=\"email\"></td></tr>\n"
+                + "		<tr><td><label for=\"mdp\">Mot de passe</label></td><td><input type=\"password\" name=\"mdp\"></td></tr>\n"
+                + "		<tr><td><label for=\"confirm\">Confirmation</label></td><td><input type=\"password\" name=\"confirm\"></td></tr>\n"
+                + "		<tr><td><label for=\"nom\">Nom</label></td><td><input type=\"text\" name=\"nom\"></td></tr>\n"
+                + "		<tr><td><label for=\"prenom\">Prénom</label></td><td><input type=\"text\" name=\"prenom\"></td></tr>\n"
+                + "		<tr><td><label for=\"adresse\">Adresse</label></td><td><input type=\"text\" name=\"adresse\"></td></tr>\n"
+                + "		<tr><td><label for=\"telephone\">Téléphone</label></td><td><input type=\"text\" name=\"telephone\"></td></tr>\n"
+                + "		<tr><td></td><td><input type=\"submit\" value=\"S'inscrire\" class=\"BoutonVert\"></td></tr>\n"
+                + "	</table>\n"
+                + "</form>");
     }
 
     public static String produireTableauPanier(ResultSet rst) throws SQLException
@@ -169,7 +187,6 @@ public class OutilsHTML
 
     public void afficherPanier(String panier)
     {
-        out.println("<script src=\"fonctions.js\"></script>");
         out.println("<div class=\"framePanier\" align=\"center\">");
         if (!panier.equals("VIDE"))
         {
@@ -179,7 +196,7 @@ public class OutilsHTML
             out.println("</form>");
         } else
         {
-            out.println("Votre panier est vide");
+            out.println("<p>Votre panier est vide. Utilisez la barre de recherche pour trouver des spectacles<p>");
         }
         out.println("</div>");
     }
