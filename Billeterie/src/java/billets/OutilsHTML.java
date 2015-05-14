@@ -206,21 +206,7 @@ public class OutilsHTML
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
-                + "                <td class=\"CBsection\">\n"
-                + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Musique\">Musique</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Sports\" checked>Sports</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"ArtEtTheatre\" checked>Arts & Théâtre</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Famille\" checked>Famille</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Festivals\" checked>Festivals</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Humour\" checked>Humour</br>\n"
-                + "                    </br>\n"
-                + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
-                + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div> \n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"SaintDenis\" checked>Saint-Denis</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"CentreBell\">Centre Bell</br>                    \n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Zenith\">Le Zénith</br></br>\n"
-                + "                </td>\n"
+                +               ConstruireCBsection()
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
@@ -266,10 +252,52 @@ public class OutilsHTML
         {
             cb += ">";
         }
-
+        cb += "<label for=\"" + name + "\">"+ name +"</label>";
         return cb;
     }
+    
+    public static String ConstruireCBsection()
+    {
+        String CbSection = "";
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
+            callstm.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm.execute();
+            ResultSet restSalles = (ResultSet) callstm.getObject(1);
+            
+            CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
+            callstm2.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm2.execute();
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);                
 
+        CbSection = "<td class=\"CBsection\">\n" +
+"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
+        while (restCategories.next())
+        {
+            CbSection += ecrireCheckBox(restCategories.getString(2),false) +"</br>";
+        }           
+        CbSection +="</br>\n" +
+"                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
+"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
+        while (restSalles.next())
+        {
+            CbSection += ecrireCheckBox(restSalles.getString(2),false) +"</br>";
+        }
+        CbSection += "</br>\n" +
+"                </td>";
+        callstm.close();
+        callstm2.close();
+        bd.deconnecter();
+        }
+        catch (SQLException ex)
+        {
+            CbSection += ex.getMessage();
+        } 
+        return CbSection;
+    }
+    
     public static String produireFacture(ResultSet rst)
             throws SQLException
     {
