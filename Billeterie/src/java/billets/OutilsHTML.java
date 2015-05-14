@@ -106,13 +106,13 @@ public class OutilsHTML
     public static String produireTableauPanier(ResultSet rst) throws SQLException
     {
         String tableau = "";
-
+        int total = 0;
         while (rst.next())
         {
             tableau += "<table class=\"PanierItem\">";
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
-            tableau += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
+            tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
             tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br /> <input type=\"number\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
             tableau += "</tr>";
 
@@ -132,8 +132,16 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSECTION") + "(" + rst.getInt("PRIXSECTION") + "$)" + "</td>";
             tableau += "<td align=\"center\">Sous-total : " + rst.getInt("SOUSTOTAL") + " $</td>";
+            total += rst.getInt("SOUSTOTAL");
             tableau += "</tr>";
             tableau += "</table>";
+        }
+        if (total != 0)
+        {
+            tableau += "<h3>Total : " + total + " $</h3>";
+        } else
+        {
+            tableau = "VIDE";
         }
 
         return tableau;
@@ -143,10 +151,15 @@ public class OutilsHTML
     {
         out.println("<script src=\"fonctions.js\"></script>");
         out.println("<div class=\"framePanier\" align=\"center\">");
-        out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
-        out.println(panier);
-        out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
-        out.println("</form>");
+        if (!panier.equals("VIDE"))
+        {
+            out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
+            out.println(panier);
+            out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
+            out.println("</form>");
+        }
+        else
+            out.println("Votre panier est vide");
         out.println("</div>");
     }
 
@@ -203,33 +216,56 @@ public class OutilsHTML
                 + "        </table>";
         return page;
     }
-    
+
     private static String ecrireCheckBox(String name, boolean checked)
     {
-        String cb = "<input type=\"checkbox\" name=\"" + name +"\" id=\"" + name +"\" onchange=\"SetUpdate();\"";
-        
+        String cb = "<input type=\"checkbox\" name=\"" + name + "\" id=\"" + name + "\" onchange=\"SetUpdate();\"";
+
         if (checked)
+        {
             cb += " checked>";
-        else
+        } else
+        {
             cb += ">";
-        
+        }
+
         return cb;
     }
-    
+
     public static String produireFacture(ResultSet rst)
             throws SQLException
     {
         String facture = "";
-        
+
+        facture
+                += facture += "<table class=\"Facture\">";
+        facture += "<tr><td>Spectacle</td><td>Quantité</td><td>Total</td></tr>";
+        int total = 0;
+        int billets = 0;
+        int nofacture = 0;
         while (rst.next())
         {
-            facture += "<table class=\"Facture\">";
             facture += "<tr>";
             facture += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
             facture += "<td>" + rst.getInt("QUANTITEBILLETS") + "</td>";
-            facture += "<td>" + rst.getInt("SOUSTOTAL") + "</td>";
+            billets += rst.getInt("QUANTITEBILLETS");
+            facture += "<td>" + rst.getInt("SOUSTOTAL") + " $</td>";
+            total += rst.getInt("SOUSTOTAL");
+            nofacture = rst.getInt("NUMFACTURE");
         }
-        
+
+        facture += "<tr><td>Total</td><td>" + billets + "</td><td>" + total + " $</td></tr>";
+        facture += "</table>";
+
+        facture = "<h1>Facture n°" + nofacture + "</h1>" + facture;
+
         return facture;
+    }
+
+    public void afficherFacture(String facture)
+    {
+        out.println("<div class=\"framePanier\" align=\"center\">");
+        out.println(facture);
+        out.println("</div>");
     }
 }

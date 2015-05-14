@@ -84,7 +84,7 @@ public class Facture extends HttpServlet
             {
                 OutilsHTML html = new OutilsHTML(out);
                 html.ouvrirHTML();
-                out.println(facture);
+                html.afficherFacture(facture);
                 html.fermerHTML();
             }
         } else
