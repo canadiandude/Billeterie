@@ -189,21 +189,7 @@ public class OutilsHTML
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
-                + "                <td class=\"CBsection\">\n"
-                + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Musique\">Musique</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Sports\" checked>Sports</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"ArtEtTheatre\" checked>Arts & Théâtre</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Famille\" checked>Famille</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Festivals\" checked>Festivals</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Humour\" checked>Humour</br>\n"
-                + "                    </br>\n"
-                + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
-                + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div> \n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"SaintDenis\" checked>Saint-Denis</br>\n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"CentreBell\">Centre Bell</br>                    \n"
-                + "                    <input type=\"checkbox\" name=\"salle\" value=\"Zenith\">Le Zénith</br></br>\n"
-                + "                </td>\n"
+                + ConstruireCBsection()
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
@@ -249,10 +235,24 @@ public class OutilsHTML
         {
             cb += ">";
         }
-
+        cb += "<label for=\"" + name + "\">"+ name +"</label>";
         return cb;
     }
-
+    
+    public static String ConstruireCBsection()
+    {
+        String CbSection = "<td class=\"CBsection\">\n" +
+"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n" +
+                      ecrireCheckBox("test",true) + 
+"                    </br>\n" +
+"                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
+"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n" +
+                     ecrireCheckBox("test2",false) +
+                "</br>\n" +
+"                </td>";
+        return CbSection;
+    }
+    
     public static String produireFacture(ResultSet rst)
             throws SQLException
     {
