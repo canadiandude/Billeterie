@@ -8,12 +8,15 @@ package billets;
 import static billets.OutilsHTML.produireTableauRecherche;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import oracle.jdbc.OracleTypes;
 
 /**
  *
@@ -47,11 +50,24 @@ public class Recherche extends HttpServlet
             
             try
             {
-               out.println(produireTableauRecherche(null)); 
+                String RechercheText  = request.getParameter("recherche");
+                ConnexionOracle bd = new ConnexionOracle();
+                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);
+                //if (RechercheText == null)
+                //{
+                //    RechercheText = "*";
+                //}                    
+                callstm.setString(2, RechercheText);
+                callstm.execute();
+                ResultSet rest = (ResultSet) callstm.getObject(1);
+                out.println(produireTableauRecherche(rest));
+                callstm.close();
+                bd.deconnecter();                 
             }
             catch (SQLException ex)
             {
-
+                response.sendRedirect("erreur.html");
             }            
             //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
             //out.println(request.getParameter("recherche"));            

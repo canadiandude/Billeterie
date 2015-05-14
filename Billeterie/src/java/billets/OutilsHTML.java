@@ -172,23 +172,26 @@ public class OutilsHTML
 "                    <table class=\"SpectacleSection\">\n" +
 "                        <!-- Affichage des représentations -->";
         //Representation
+        while (rstRep.next())
+        {
         page += "       <form>\n" +
 "                            <tr class=\"Spectacle\">\n" +
 "                                <td style=\"width: 100px\" >\n" +
-"                                    <img class=\"affiche\" src=\"http://i.imgur.com/5psUhz1.jpg\">\n" +
+"                                    <img class=\"affiche\" src=\"" +rstRep.getString(7)+ "\">\n" +
 "                                </td>\n" +
 "                                <td>\n" +
-"                                    <div class=\"TitreSpectacle\">Roger Waters The Wall</div><br>\n" +
-"                                    <div class=\"NomArtiste\">Roger Waters</div>\n" +
-"                                    <div class=\"SalleSpectacle\">Centre Bell</div>\n" +
-"                                    <div class=\"DateSpectacle\">16 decembre 2016</div>\n" +
+"                                    <div class=\"TitreSpectacle\">"+rstRep.getNString(3)+"</div><br>\n" +
+"                                    <div class=\"NomArtiste\">"+rstRep.getNString(4)+"</div>\n" +
+"                                    <div class=\"SalleSpectacle\">"+rstRep.getNString(2)+"</div>\n" +
+"                                    <div class=\"DateSpectacle\">"+rstRep.getNString(6)+"</div>\n" +
 "                                    <div class=\"AjouterPanier\">\n" +
 "                                        <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n" +
 "                                        <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n" +
 "                                    </div>\n" +
 "                                </td>\n" +
 "                            </tr>\n" +
-"                        </form>";
+"                        </form>";  
+        }
         //Fermeture de representation
         page += "       </table>\n" +
 "                    </div>\n" +
