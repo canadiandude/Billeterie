@@ -189,7 +189,7 @@ public class OutilsHTML
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
-                + ConstruireCBsection()
+                +               ConstruireCBsection()
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
@@ -241,8 +241,6 @@ public class OutilsHTML
     
     public static String ConstruireCBsection()
     {
-        //ResultSet restSalles = null;
-        //ResultSet restCategories = null;
         String CbSection = "";
         try
         {
@@ -251,14 +249,11 @@ public class OutilsHTML
             callstm.registerOutParameter(1, OracleTypes.CURSOR);
             callstm.execute();
             ResultSet restSalles = (ResultSet) callstm.getObject(1);
-            //callstm.close();
             
             CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
             callstm2.registerOutParameter(1, OracleTypes.CURSOR);
             callstm2.execute();
-            ResultSet restCategories = (ResultSet) callstm2.getObject(1);
-            //callstm2.close();
-            //bd.deconnecter();                 
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);                
 
         CbSection = "<td class=\"CBsection\">\n" +
 "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
