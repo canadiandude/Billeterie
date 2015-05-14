@@ -88,11 +88,13 @@ public class Panier extends HttpServlet
             
             while (rst.next())
             {
-                CallableStatement callUpdate = bd.prepareCall("{ call PKG_BILLETS.UPDATE_QUANTITE_ACHATS(?,?) }");
+                CallableStatement callUpdate = bd.prepareCall("{ call PKG_BILLETS.UPDATE_PANIER(?,?,?) }");
                 int numachat = rst.getInt("NUMACHAT");
                 callUpdate.setInt(1, numachat);
-                int qte = Integer.parseInt(request.getParameter(""+numachat));
+                int qte = Integer.parseInt(request.getParameter("quantite_"+numachat));
                 callUpdate.setInt(2, qte);
+                String print = request.getParameter("print_"+numachat) != null ? "Y" : "N";
+                callUpdate.setString(3, print);
                 callUpdate.execute();
             }
 
