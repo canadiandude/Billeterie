@@ -51,7 +51,7 @@ public class Panier extends HttpServlet
                 callstm.registerOutParameter(1, OracleTypes.CURSOR);
                 callstm.setString(2, client);
                 callstm.execute();
-                tableau = OutilsHTML.produireTableauPanier(client, (ResultSet) callstm.getObject(1));
+                tableau = OutilsHTML.produireTableauPanier((ResultSet) callstm.getObject(1));
                 callstm.close();
                 bd.deconnecter();
             } catch (SQLException sqle)

@@ -103,7 +103,7 @@ public class OutilsHTML
         out.println("</form>");
     }
 
-    public static String produireTableauPanier(String client, ResultSet rst) throws SQLException
+    public static String produireTableauPanier(ResultSet rst) throws SQLException
     {
         String tableau = "";
 
@@ -214,5 +214,22 @@ public class OutilsHTML
             cb += ">";
         
         return cb;
+    }
+    
+    public static String produireFacture(ResultSet rst)
+            throws SQLException
+    {
+        String facture = "";
+        
+        while (rst.next())
+        {
+            facture += "<table class=\"Facture\">";
+            facture += "<tr>";
+            facture += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
+            facture += "<td>" + rst.getInt("QUANTITEBILLETS") + "</td>";
+            facture += "<td>" + rst.getInt("SOUSTOTAL") + "</td>";
+        }
+        
+        return facture;
     }
 }
