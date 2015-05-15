@@ -206,8 +206,8 @@ public class OutilsHTML
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
                 + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\">"
-                +                   ConstruireCBsection()
-                + "             <form>"
+                + ConstruireCBsection()
+                + "             </form>"
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
@@ -217,7 +217,7 @@ public class OutilsHTML
         {
             String date = rstRep.getString(6);
             date = date.substring(0, date.lastIndexOf(":"));
-            page += "       <form>\n"
+            page += ""
                     + "                            <tr class=\"Spectacle\">\n"
                     + "                                <td style=\"width: 100px\" >\n"
                     + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
@@ -227,15 +227,16 @@ public class OutilsHTML
                     + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
                     + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
                     + "                                    <div class=\"DateSpectacle\">"
-                    +date                                
+                    + date
                     + "</div>\n"
                     + "                                    <div class=\"AjouterPanier\">\n"
-                    + "                                        <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n"
-                    + "                                        <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n"
+                    + "                                         <form action=\"Acheter\">\n"
+                    + "                                              <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n"
+                    + "                                              <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n"
+                    + "                                         </form>\n"
                     + "                                    </div>\n"
                     + "                                </td>\n"
-                    + "                            </tr>\n"
-                    + "                        </form>";
+                    + "                            </tr>\n";
         }
         //Fermeture de representation
         page += "       </table>\n"
@@ -257,10 +258,10 @@ public class OutilsHTML
         {
             cb += ">";
         }
-        cb += "<label for=\"" + name + "\">"+ label +"</label>";
+        cb += "<label for=\"" + name + "\">" + label + "</label>";
         return cb;
     }
-    
+
     public static String ConstruireCBsection()
     {
         String CbSection = "";
@@ -271,38 +272,37 @@ public class OutilsHTML
             callstm.registerOutParameter(1, OracleTypes.CURSOR);
             callstm.execute();
             ResultSet restSalles = (ResultSet) callstm.getObject(1);
-            
+
             CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
             callstm2.registerOutParameter(1, OracleTypes.CURSOR);
             callstm2.execute();
-            ResultSet restCategories = (ResultSet) callstm2.getObject(1);                
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);
 
-        CbSection ="<td class=\"CBsection\">\n" +
-"                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
-        while (restCategories.next())
-        {
-            CbSection += ecrireCheckBox(restCategories.getString(2),(1>5),restCategories.getString(2)) +"</br>";
-        }           
-        CbSection +="</br>\n" +
-"                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
-"                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
-        while (restSalles.next())
-        {
-            CbSection += ecrireCheckBox(restSalles.getString(2),false,restSalles.getString(2)) +"</br>";
-        }
-        CbSection += "</br>\n" +
-"                </td>\n";
-        callstm.close();
-        callstm2.close();
-        bd.deconnecter();
-        }
-        catch (SQLException ex)
+            CbSection = "<td class=\"CBsection\">\n"
+                    + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
+            while (restCategories.next())
+            {
+                CbSection += ecrireCheckBox(restCategories.getString(2), (1 > 5), restCategories.getString(2)) + "</br>";
+            }
+            CbSection += "</br>\n"
+                    + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
+                    + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
+            while (restSalles.next())
+            {
+                CbSection += ecrireCheckBox(restSalles.getString(2), false, restSalles.getString(2)) + "</br>";
+            }
+            CbSection += "</br>\n"
+                    + "                </td>\n";
+            callstm.close();
+            callstm2.close();
+            bd.deconnecter();
+        } catch (SQLException ex)
         {
             CbSection += ex.getMessage();
-        } 
+        }
         return CbSection;
     }
-    
+
     public static String produireFacture(ResultSet rst)
             throws SQLException
     {
@@ -338,5 +338,54 @@ public class OutilsHTML
         out.println("<div class=\"framePanier\" align=\"center\">");
         out.println(facture);
         out.println("</div>");
+    }
+
+    public void produireFormAcheter()
+    {
+        out.println(""
+                + "        <table style=\"margin: auto; margin-top:10px;\">\n"
+                + "            <tr>\n"
+                + "                <td rowspan=\"3\"><img src=\"http://i.imgur.com/aaY7urK.jpg\"></td>\n"
+                + "                <td>Spectacle <br /> Artiste</td>\n"
+                + "            </tr>\n"
+                + "            <tr>\n"
+                + "                <td>Date Salle</td>\n"
+                + "            </tr>\n"
+                + "            <tr>\n"
+                + "                <td>\n"
+                + "                    <form method=\"post\" action=\"Acheter\">\n"
+                + "                        <table>\n"
+                + "                            <tr>\n"
+                + "                                <td>\n"
+                + "                                    <table>\n"
+                + "                                        <tr>\n"
+                + "                                            <td>Section 1</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
+                + "                                        </tr>                                        \n"
+                + "                                        <tr>\n"
+                + "                                            <td>Section 2</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
+                + "                                        </tr>      \n"
+                + "                                        <tr>\n"
+                + "                                            <td>Section 3</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
+                + "                                        </tr>      \n"
+                + "                                        <tr>\n"
+                + "                                            <td>Section 4</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
+                + "                                        </tr>       \n"
+                + "                                        <tr>\n"
+                + "                                            <td>Section 5</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
+                + "                                        </tr>      \n"
+                + "                                    </table>\n"
+                + "                                </td>\n"
+                + "                            </tr>\n"
+                + "                            <tr>\n"
+                + "                                <td>Total : XXX $</td>\n"
+                + "                            </tr>\n"
+                + "                            <tr>\n"
+                + "                                <td><input type=\"submit\" value=\"Ajouter au panier\"></td>\n"
+                + "                            </tr>\n"
+                + "                        </table>\n"
+                + "                    </form>\n"
+                + "                </td>\n"
+                + "            </tr>\n"
+                + "        </table>");
     }
 }
