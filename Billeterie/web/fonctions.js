@@ -6,3 +6,15 @@ function SetUpdate() {
         document.getElementById("submitPanier").setAttribute("class", "BoutonBleu");
     }
 }
+
+function CalculerTotal() {
+    var prix = document.getElementsByClassName("prix");
+    var qte = document.getElementsByClassName("quantite");
+    var total = 0;
+    for (var i = 0; i < prix.length; i++) {
+        var str = prix[i].innerHTML;
+        str = str.replace("$", "");
+        total += str * qte[i].value;
+    }
+    document.getElementById("total").innerHTML = total + "$";
+}

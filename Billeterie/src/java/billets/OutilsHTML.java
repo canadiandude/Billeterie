@@ -232,7 +232,7 @@ public class OutilsHTML
                     + "                                    <div class=\"AjouterPanier\">\n"
                     + "                                         <form action=\"Acheter\">\n"
                     + "                                              <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n"
-                    + "                                              <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n"
+                    + "                                              <input type=\"hidden\" value=\""+ rstRep.getInt(1) +"\" name=\"representation\">\n"
                     + "                                         </form>\n"
                     + "                                    </div>\n"
                     + "                                </td>\n"
@@ -340,16 +340,20 @@ public class OutilsHTML
         out.println("</div>");
     }
 
-    public void produireFormAcheter()
+    public static String produireFormAcheter(ResultSet rstRep, ResultSet rstSec)
+            throws SQLException
     {
-        out.println(""
+        String date = rstRep.getObject("DATEDEBUT").toString();
+        date = date.substring(0, date.lastIndexOf(":"));
+        String acheter = "";
+        acheter += ""
                 + "        <table style=\"margin: auto; margin-top:10px;\">\n"
                 + "            <tr>\n"
-                + "                <td rowspan=\"3\"><img src=\"http://i.imgur.com/aaY7urK.jpg\"></td>\n"
-                + "                <td>Spectacle <br /> Artiste</td>\n"
+                + "                <td rowspan=\"3\"><img src=\""+ rstRep.getString("AFFICHE") +"\"></td>\n"
+                + "                <td>"+ rstRep.getString("TITRE") +"<br />"+ rstRep.getString("ARTISTE") +"</td>\n"
                 + "            </tr>\n"
                 + "            <tr>\n"
-                + "                <td>Date Salle</td>\n"
+                + "                <td>"+ date + "   " + rstRep.getString("NOMSALLE") +"</td>\n"
                 + "            </tr>\n"
                 + "            <tr>\n"
                 + "                <td>\n"
@@ -357,27 +361,19 @@ public class OutilsHTML
                 + "                        <table>\n"
                 + "                            <tr>\n"
                 + "                                <td>\n"
-                + "                                    <table>\n"
-                + "                                        <tr>\n"
-                + "                                            <td>Section 1</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
-                + "                                        </tr>                                        \n"
-                + "                                        <tr>\n"
-                + "                                            <td>Section 2</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
-                + "                                        </tr>      \n"
-                + "                                        <tr>\n"
-                + "                                            <td>Section 3</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
-                + "                                        </tr>      \n"
-                + "                                        <tr>\n"
-                + "                                            <td>Section 4</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
-                + "                                        </tr>       \n"
-                + "                                        <tr>\n"
-                + "                                            <td>Section 5</td><td>XX$</td><td><input type=\"number\" name=\"idsection\"></td>\n"
-                + "                                        </tr>      \n"
-                + "                                    </table>\n"
+                + "                                    <table>\n";
+                while (rstSec.next())
+                {
+                    acheter += ""
+                    + "                                        <tr>\n"
+                    + "                                            <td>"+rstSec.getString("NOM")+"</td><td class=\"prix\">"+rstSec.getInt("PRIXSECTION")+"$</td><td><input type=\"number\" name=\""+rstSec.getInt("NUMSECTION")+"\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
+                    + "                                        </tr>";
+                }
+                acheter += "                                    </table>\n"
                 + "                                </td>\n"
                 + "                            </tr>\n"
                 + "                            <tr>\n"
-                + "                                <td>Total : XXX $</td>\n"
+                + "                                <td id=\"total\">Total : 0$</td>\n"
                 + "                            </tr>\n"
                 + "                            <tr>\n"
                 + "                                <td><input type=\"submit\" value=\"Ajouter au panier\"></td>\n"
@@ -386,6 +382,8 @@ public class OutilsHTML
                 + "                    </form>\n"
                 + "                </td>\n"
                 + "            </tr>\n"
-                + "        </table>");
+                + "        </table>";
+        
+        return acheter;
     }
 }

@@ -7,11 +7,15 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import oracle.jdbc.OracleTypes;
 
 /**
  *
@@ -36,12 +40,37 @@ public class Acheter extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        String acheter = "";
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callRep = bd.prepareCall("{ ?= call PKG_BILLETS.GET_INFO_REPRESENTATION(?) }");
+            callRep.registerOutParameter(1, OracleTypes.CURSOR);
+            callRep.setInt(2, Integer.parseInt(request.getParameter("representation")));
+            callRep.execute();
+            ResultSet rstRep = (ResultSet)callRep.getObject(1);
+            rstRep.next();
+            
+            CallableStatement callSec = bd.prepareCall("{ ?= call PKG_BILLETS.GET_INFO_SECTIONS(?)}");
+            callSec.registerOutParameter(1, OracleTypes.CURSOR);
+            callSec.setString(2, rstRep.getString("NOMSALLE"));
+            callSec.execute();
+            
+            acheter = OutilsHTML.produireFormAcheter(rstRep, (ResultSet)callSec.getObject(1));
+            callRep.close();
+            callSec.close();
+            bd.deconnecter();
+        } catch (SQLException sqle)
+        {
+            response.sendRedirect("erreur.html");
+        }
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter())
         {
             OutilsHTML html = new OutilsHTML(out);
             html.ouvrirHTML();
-            html.produireFormAcheter();
+            out.println(acheter);
             html.fermerHTML();
         }
     }
