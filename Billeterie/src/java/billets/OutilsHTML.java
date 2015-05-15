@@ -205,7 +205,9 @@ public class OutilsHTML
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
-                +               ConstruireCBsection()
+                + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\">"
+                +                   ConstruireCBsection()
+                + "             <form>"
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
@@ -213,16 +215,20 @@ public class OutilsHTML
         //Representation
         while (rstRep.next())
         {
+            String date = rstRep.getString(6);
+            date = date.substring(0, date.lastIndexOf(":"));
             page += "       <form>\n"
                     + "                            <tr class=\"Spectacle\">\n"
                     + "                                <td style=\"width: 100px\" >\n"
                     + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
                     + "                                </td>\n"
                     + "                                <td>\n"
-                    + "                                    <div class=\"TitreSpectacle\">" + rstRep.getNString(3) + "</div><br>\n"
-                    + "                                    <div class=\"NomArtiste\">" + rstRep.getNString(4) + "</div>\n"
-                    + "                                    <div class=\"SalleSpectacle\">" + rstRep.getNString(2) + "</div>\n"
-                    + "                                    <div class=\"DateSpectacle\">" + rstRep.getNString(6) + "</div>\n"
+                    + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
+                    + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
+                    + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
+                    + "                                    <div class=\"DateSpectacle\">"
+                    +date                                
+                    + "</div>\n"
                     + "                                    <div class=\"AjouterPanier\">\n"
                     + "                                        <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n"
                     + "                                        <!-- input type=\"hidden\" value=\"\" name=\"representation\" -->\n"
@@ -271,11 +277,11 @@ public class OutilsHTML
             callstm2.execute();
             ResultSet restCategories = (ResultSet) callstm2.getObject(1);                
 
-        CbSection = "<td class=\"CBsection\">\n" +
+        CbSection ="<td class=\"CBsection\">\n" +
 "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
         while (restCategories.next())
         {
-            CbSection += ecrireCheckBox(restCategories.getString(2),false,restCategories.getString(2)) +"</br>";
+            CbSection += ecrireCheckBox(restCategories.getString(2),(1>5),restCategories.getString(2)) +"</br>";
         }           
         CbSection +="</br>\n" +
 "                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
@@ -285,7 +291,7 @@ public class OutilsHTML
             CbSection += ecrireCheckBox(restSalles.getString(2),false,restSalles.getString(2)) +"</br>";
         }
         CbSection += "</br>\n" +
-"                </td>";
+"                </td>\n";
         callstm.close();
         callstm2.close();
         bd.deconnecter();
