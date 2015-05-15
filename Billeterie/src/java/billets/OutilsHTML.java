@@ -147,8 +147,7 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
             tableau += "<td align=\"center\">";
-            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"));
-            tableau += "<label for=\"print_" + rst.getInt("NUMACHAT") + "\">Imprimer*</label></td>";
+            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer*");
             tableau += "</tr>";
 
             tableau += "<tr>";
@@ -241,7 +240,7 @@ public class OutilsHTML
         return page;
     }
 
-    private static String ecrireCheckBox(String name, boolean checked)
+    private static String ecrireCheckBox(String name, boolean checked, String label)
     {
         String cb = "<input type=\"checkbox\" name=\"" + name + "\" id=\"" + name + "\" onchange=\"SetUpdate();\"";
 
@@ -252,7 +251,7 @@ public class OutilsHTML
         {
             cb += ">";
         }
-        cb += "<label for=\"" + name + "\">"+ name +"</label>";
+        cb += "<label for=\"" + name + "\">"+ label +"</label>";
         return cb;
     }
     
@@ -276,14 +275,14 @@ public class OutilsHTML
 "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
         while (restCategories.next())
         {
-            CbSection += ecrireCheckBox(restCategories.getString(2),false) +"</br>";
+            CbSection += ecrireCheckBox(restCategories.getString(2),false,restCategories.getString(2)) +"</br>";
         }           
         CbSection +="</br>\n" +
 "                    <hr style=\"width:70%\" align=\"left\"></hr>\n" +
 "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
         while (restSalles.next())
         {
-            CbSection += ecrireCheckBox(restSalles.getString(2),false) +"</br>";
+            CbSection += ecrireCheckBox(restSalles.getString(2),false,restSalles.getString(2)) +"</br>";
         }
         CbSection += "</br>\n" +
 "                </td>";
