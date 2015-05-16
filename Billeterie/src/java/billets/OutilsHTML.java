@@ -30,7 +30,7 @@ public class OutilsHTML
         out.println("<!DOCTYPE html>");
         out.println("<html>");
         out.println("<head>");
-        out.println("<title>Servlet Recherche</title>");
+        out.println("<title>" + titre + "</title>");
         out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">");
         out.println("<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>\n"
                 + "        <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>");
@@ -64,8 +64,8 @@ public class OutilsHTML
                 + "                                <div class=\"TiteSite\">Billetterie Express .com</div>\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
-                +                                   produireMenuConnexion(client)
-//+ "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
+                + produireMenuConnexion(client)
+                //+ "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
                 //+ "                                <a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n"
                 + "                            </td>\n"
                 + "                        </tr>\n"
@@ -87,22 +87,21 @@ public class OutilsHTML
                 + "            </tr>");
         out.println("</table>");
     }
-    
+
     private String produireMenuConnexion(String client)
     {
         String menu = "";
-        
+
         if (client != null)
         {
-            menu += "<h3>"+client+"</h3>\n"
-                 + "<a href=\"/Billeterie/Deconnexion\" class=\"BoutonBleu\">Déconnexion</a>\n";
-        }
-        else
+            menu += "<h3>" + client + "</h3>\n"
+                    + "<a href=\"/Billeterie/Deconnexion\" class=\"BoutonBleu\">Déconnexion</a>\n";
+        } else
         {
             menu += "<a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
-                 + "<a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n";
+                    + "<a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n";
         }
-        
+
         return menu;
     }
 
@@ -151,7 +150,7 @@ public class OutilsHTML
             tableau += "<table class=\"PanierItem\">";
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
-            tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "<input type=\"submit\" value=\"X\" onclick=\"SetDelete("+rst.getInt("NUMACHAT")+")\" style=\"float:right\"></td>";
+            tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "<input type=\"submit\" value=\"X\" onclick=\"SetDelete(" + rst.getInt("NUMACHAT") + ")\" style=\"float:right\"></td>";
             tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br />";
             tableau += "<input type=\"number\" min=\"0\" max=\"" + compterPlacesDispo(rst.getInt("QUANTITEBILLETS"), rst.getInt("CODEREPRESENTATION"), rst.getInt("CODESECTION"))
                     + "\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
@@ -251,8 +250,8 @@ public class OutilsHTML
                     + "</div>\n"
                     + "                                    <div class=\"AjouterPanier\">\n"
                     + "                                         <form action=\"Acheter\">\n"
-                    + "                                              <input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n"
-                    + "                                              <input type=\"hidden\" value=\""+ rstRep.getInt(1) +"\" name=\"representation\">\n"
+                    +                                                produireBoutonAjouter(rstRep.getInt(1))
+                    + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
                     + "                                         </form>\n"
                     + "                                    </div>\n"
                     + "                                </td>\n"
@@ -265,6 +264,28 @@ public class OutilsHTML
                 + "            </tr>\n"
                 + "        </table>";
         return page;
+    }
+
+    private static String produireBoutonAjouter(int numrep)
+            throws SQLException
+    {
+        ConnexionOracle bd = new ConnexionOracle();
+        CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.TOTAL_PLACES_DISPO(?) }");
+        callstm.registerOutParameter(1, OracleTypes.NUMBER);
+        callstm.setInt(2, numrep);
+        callstm.execute();
+
+        String bouton = "";
+
+        if (callstm.getInt(1) > 0)
+        {
+            bouton = "<input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n";
+        } else
+        {
+            bouton = "<h5>Complet</h5>";
+        }
+
+        return bouton;
     }
 
     private static String ecrireCheckBox(String name, boolean checked, String label)
@@ -369,29 +390,29 @@ public class OutilsHTML
         acheter += ""
                 + "        <table style=\"margin: auto; margin-top:10px;\">\n"
                 + "            <tr>\n"
-                + "                <td rowspan=\"3\"><img src=\""+ rstRep.getString("AFFICHE") +"\"></td>\n"
-                + "                <td>"+ rstRep.getString("TITRE") +"<br />"+ rstRep.getString("ARTISTE") +"</td>\n"
+                + "                <td rowspan=\"3\"><img src=\"" + rstRep.getString("AFFICHE") + "\"></td>\n"
+                + "                <td>" + rstRep.getString("TITRE") + "<br />" + rstRep.getString("ARTISTE") + "</td>\n"
                 + "            </tr>\n"
                 + "            <tr>\n"
-                + "                <td>"+ date + "   " + rstRep.getString("NOMSALLE") +"</td>\n"
+                + "                <td>" + date + "   " + rstRep.getString("NOMSALLE") + "</td>\n"
                 + "            </tr>\n"
                 + "            <tr>\n"
                 + "                <td>\n"
                 + "                    <form method=\"post\" action=\"Acheter\">\n"
-                + "                        <input type=\"hidden\" name=\"representation\" value=\""+ rstRep.getInt("NUMREPRESENTATION") +"\">"
+                + "                        <input type=\"hidden\" name=\"representation\" value=\"" + rstRep.getInt("NUMREPRESENTATION") + "\">"
                 + "                        <table>\n"
                 + "                            <tr>\n"
                 + "                                <td>\n"
                 + "                                    <table>\n";
-                while (rstSec.next())
-                {
-                    acheter += ""
+        while (rstSec.next())
+        {
+            acheter += ""
                     + "                                        <tr>\n"
-                    + "                                            <td>"+rstSec.getString("NOM")+"</td><td class=\"prix\">"+rstSec.getInt("PRIXSECTION")+"$</td><td><input type=\"number\" name=\""+rstSec.getInt("NUMSECTION")+"\" min=\"0\" max=\"" + compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION"))+ "\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
-                    + "                                            <td><input type=\"hidden\" name=\"sections\" value=\""+rstSec.getInt("NUMSECTION")+"\"></td>"
+                    + "                                            <td>" + rstSec.getString("NOM") + "</td><td class=\"prix\">" + rstSec.getInt("PRIXSECTION") + "$</td><td><input type=\"number\" name=\"" + rstSec.getInt("NUMSECTION") + "\" min=\"0\" max=\"" + compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION")) + "\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
+                    + "                                            <td><input type=\"hidden\" name=\"sections\" value=\"" + rstSec.getInt("NUMSECTION") + "\"></td>"
                     + "                                        </tr>";
-                }
-                acheter += "                                    </table>\n"
+        }
+        acheter += "                                    </table>\n"
                 + "                                </td>\n"
                 + "                            </tr>\n"
                 + "                            <tr>\n"
@@ -405,7 +426,7 @@ public class OutilsHTML
                 + "                </td>\n"
                 + "            </tr>\n"
                 + "        </table>";
-        
+
         return acheter;
     }
 }
