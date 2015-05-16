@@ -367,7 +367,7 @@ public class OutilsHTML
                 {
                     acheter += ""
                     + "                                        <tr>\n"
-                    + "                                            <td>"+rstSec.getString("NOM")+"</td><td class=\"prix\">"+rstSec.getInt("PRIXSECTION")+"$</td><td><input type=\"number\" name=\""+rstSec.getInt("NUMSECTION")+"\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
+                    + "                                            <td>"+rstSec.getString("NOM")+"</td><td class=\"prix\">"+rstSec.getInt("PRIXSECTION")+"$</td><td><input type=\"number\" name=\""+rstSec.getInt("NUMSECTION")+"\" min=\"0\" max=\"" + compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION"))+ "\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
                     + "                                            <td><input type=\"hidden\" name=\"sections\" value=\""+rstSec.getInt("NUMSECTION")+"\"></td>"
                     + "                                        </tr>";
                 }

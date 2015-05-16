@@ -100,7 +100,7 @@ public class Acheter extends HttpServlet
                 for (String section : sections)
                 {
                     String quantite = request.getParameter(section);
-                    if (quantite != null && !quantite.equals("0"))
+                    if (quantite != null && !quantite.isEmpty() && !quantite.equals("0"))
                     {
                         CallableStatement callstm = bd.prepareCall("{ call PKG_BILLETS.INSERT_ACHAT(?,?,?,?,?,?) }");
                         callstm.setInt(1, Integer.parseInt(request.getParameter("representation")));
