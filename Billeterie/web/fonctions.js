@@ -7,6 +7,14 @@ function SetUpdate() {
     }
 }
 
+function SetDelete(id) {
+    var form = document.getElementById("formPanier");
+    if (form !== null) {
+        form.setAttribute("action", "Delete");
+        document.getElementsByName("delete")[0].setAttribute("value", id);
+    }
+}
+
 function CalculerTotal() {
     var prix = document.getElementsByClassName("prix");
     var qte = document.getElementsByClassName("quantite");

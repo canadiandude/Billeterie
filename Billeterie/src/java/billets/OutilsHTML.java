@@ -132,7 +132,7 @@ public class OutilsHTML
             tableau += "<table class=\"PanierItem\">";
             tableau += "<tr>";
             tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
-            tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
+            tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "<input type=\"submit\" value=\"X\" onclick=\"SetDelete("+rst.getInt("NUMACHAT")+")\" style=\"float:right\"></td>";
             tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br />";
             tableau += "<input type=\"number\" min=\"0\" max=\"" + compterPlacesDispo(rst.getInt("QUANTITEBILLETS"), rst.getInt("CODEREPRESENTATION"), rst.getInt("CODESECTION"))
                     + "\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
@@ -190,6 +190,7 @@ public class OutilsHTML
         if (!panier.equals("VIDE"))
         {
             out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
+            out.println("<input type=\"hidden\" name=\"delete\">");
             out.println(panier);
             out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
             out.println("</form>");
