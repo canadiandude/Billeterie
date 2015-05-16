@@ -358,6 +358,7 @@ public class OutilsHTML
                 + "            <tr>\n"
                 + "                <td>\n"
                 + "                    <form method=\"post\" action=\"Acheter\">\n"
+                + "                        <input type=\"hidden\" name=\"representation\" value=\""+ rstRep.getInt("NUMREPRESENTATION") +"\">"
                 + "                        <table>\n"
                 + "                            <tr>\n"
                 + "                                <td>\n"
@@ -367,6 +368,7 @@ public class OutilsHTML
                     acheter += ""
                     + "                                        <tr>\n"
                     + "                                            <td>"+rstSec.getString("NOM")+"</td><td class=\"prix\">"+rstSec.getInt("PRIXSECTION")+"$</td><td><input type=\"number\" name=\""+rstSec.getInt("NUMSECTION")+"\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
+                    + "                                            <td><input type=\"hidden\" name=\"sections\" value=\""+rstSec.getInt("NUMSECTION")+"\"></td>"
                     + "                                        </tr>";
                 }
                 acheter += "                                    </table>\n"
