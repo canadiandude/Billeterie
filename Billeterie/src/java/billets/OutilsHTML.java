@@ -25,7 +25,7 @@ public class OutilsHTML
         out = pw;
     }
 
-    public void ouvrirHTML()
+    public void ouvrirHTML(String titre, String client)
     {
         out.println("<!DOCTYPE html>");
         out.println("<html>");
@@ -37,7 +37,7 @@ public class OutilsHTML
         out.println("<script src=\"fonctions.js\"></script>");
         out.println("</head>");
         out.println("<body>");
-        produireEntete();
+        produireEntete(titre, client);
     }
 
     public void fermerHTML()
@@ -46,7 +46,7 @@ public class OutilsHTML
         out.println("</html>");
     }
 
-    private void produireEntete()
+    private void produireEntete(String titre, String client)
     {
         out.println("<table class=\"TopMenu\" width=\"100%\">");
         //out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
@@ -64,8 +64,9 @@ public class OutilsHTML
                 + "                                <div class=\"TiteSite\">Billetterie Express .com</div>\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
-                + "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
-                + "                                <a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n"
+                +                                   produireMenuConnexion(client)
+//+ "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
+                //+ "                                <a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n"
                 + "                            </td>\n"
                 + "                        </tr>\n"
                 + "                        <tr>\n"
@@ -85,6 +86,24 @@ public class OutilsHTML
                 + "                </td>\n"
                 + "            </tr>");
         out.println("</table>");
+    }
+    
+    private String produireMenuConnexion(String client)
+    {
+        String menu = "";
+        
+        if (client != null)
+        {
+            menu += "<h3>"+client+"</h3>\n"
+                 + "<a href=\"/Billeterie/Deconnexion\" class=\"BoutonBleu\">Déconnexion</a>\n";
+        }
+        else
+        {
+            menu += "<a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
+                 + "<a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n";
+        }
+        
+        return menu;
     }
 
     public void produireFormAuthentification()

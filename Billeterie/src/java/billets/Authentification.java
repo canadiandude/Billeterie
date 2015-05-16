@@ -44,7 +44,7 @@ public class Authentification extends HttpServlet
         try (PrintWriter out = response.getWriter())
         {
             OutilsHTML html = new OutilsHTML(out);
-            html.ouvrirHTML();
+            html.ouvrirHTML("Connexion", (String) request.getSession().getAttribute("client"));
 
             html.produireFormAuthentification();
 
@@ -93,7 +93,7 @@ public class Authentification extends HttpServlet
             {
                 response.setContentType("text/html;charset=UTF-8");
                 OutilsHTML html = new OutilsHTML(out);
-                html.ouvrirHTML();
+                html.ouvrirHTML("Connexion", (String) request.getSession().getAttribute("client"));
                 out.println("<h1 style=\"color: red\">Courriel/Mot de passe invalide !</h1>");
                 html.produireFormAuthentification();
                 html.fermerHTML();

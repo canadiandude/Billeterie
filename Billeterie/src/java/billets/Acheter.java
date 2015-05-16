@@ -71,7 +71,7 @@ public class Acheter extends HttpServlet
         try (PrintWriter out = response.getWriter())
         {
             OutilsHTML html = new OutilsHTML(out);
-            html.ouvrirHTML();
+            html.ouvrirHTML("Achat de billets", (String) request.getSession().getAttribute("client"));
             out.println(acheter);
             html.fermerHTML();
         }

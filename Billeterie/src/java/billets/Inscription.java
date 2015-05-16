@@ -44,7 +44,7 @@ public class Inscription extends HttpServlet
         try (PrintWriter out = response.getWriter())
         {
             OutilsHTML html = new OutilsHTML(out);
-            html.ouvrirHTML();
+            html.ouvrirHTML("Inscription", (String) request.getSession().getAttribute("client"));
             if (request.getSession().getAttribute("inscription") != null)
             {
                 out.println("<h3>" + (String)request.getSession().getAttribute("inscription") + "</h3>");

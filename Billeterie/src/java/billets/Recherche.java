@@ -46,7 +46,7 @@ public class Recherche extends HttpServlet
         {
             OutilsHTML html = new OutilsHTML(out);
             
-            html.ouvrirHTML();
+            html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
             
             try
             {

@@ -7,25 +7,21 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import oracle.jdbc.OracleTypes;
 
 /**
  *
  * @author Francois
  */
-@WebServlet(name = "Facture", urlPatterns =
+@WebServlet(name = "Deconnexion", urlPatterns =
 {
-    "/Facture"
+    "/Deconnexion"
 })
-public class Facture extends HttpServlet
+public class Deconnexion extends HttpServlet
 {
 
     /**
@@ -40,49 +36,8 @@ public class Facture extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        payerPanier(request, response);
-    }
-
-    private void payerPanier(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        String client = (String) request.getSession().getAttribute("client");
-        String facture = "<h1>Une erreur est survenue</h1>";// Message par défaut
-        if (client != null)
-        {
-            try
-            {
-                ConnexionOracle bd = new ConnexionOracle();
-                CallableStatement callPayer = bd.prepareCall("{ call PKG_BILLETS.PAYER_PANIER(?) }");
-                callPayer.setString(1, client);
-                callPayer.execute();
-                callPayer.close();
-                
-                CallableStatement callFacture = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_FACTURE(?) }");
-                callFacture.registerOutParameter(1, OracleTypes.CURSOR);
-                callFacture.setString(2, client);
-                callFacture.execute();
-                facture = OutilsHTML.produireFacture((ResultSet) callFacture.getObject(1));
-                callFacture.close();
-                
-                bd.deconnecter();
-            } catch (SQLException sqle)
-            {
-                response.sendRedirect("erreur.html");
-            }
-
-            response.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = response.getWriter())
-            {
-                OutilsHTML html = new OutilsHTML(out);
-                html.ouvrirHTML("Facture", (String) request.getSession().getAttribute("client"));
-                html.afficherFacture(facture);
-                html.fermerHTML();
-            }
-        } else
-        {
-            response.sendRedirect("Authentification");
-        }
+        request.getSession().invalidate();
+        response.sendRedirect("index.html");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

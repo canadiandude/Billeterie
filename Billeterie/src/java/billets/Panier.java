@@ -63,7 +63,7 @@ public class Panier extends HttpServlet
             try (PrintWriter out = response.getWriter())
             {
                 OutilsHTML html = new OutilsHTML(out);
-                html.ouvrirHTML();
+                html.ouvrirHTML("Panier", (String) request.getSession().getAttribute("client"));
                 html.afficherPanier(tableau);
                 html.fermerHTML();
             }
