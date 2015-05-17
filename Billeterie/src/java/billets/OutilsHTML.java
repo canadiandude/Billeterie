@@ -275,16 +275,25 @@ public class OutilsHTML
         callstm.setInt(2, numrep);
         callstm.execute();
 
-        String bouton = "";
+        CallableStatement callPrix = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_PRIX_MIN(?) }");
+        callPrix.registerOutParameter(1, OracleTypes.NUMBER);
+        callPrix.setInt(2, numrep);
+        callPrix.execute();
+        
+        String bouton = "À partir de " + callPrix.getInt(1) + " $ <br/>";
 
         if (callstm.getInt(1) > 0)
         {
-            bouton = "<input type=\"submit\" value=\"Ajouter au panier\" id=\"repID\">\n";
+            bouton += "<input type=\"submit\" value=\"Ajouter au panier\" class=\"BoutonVert\">\n";
         } else
         {
-            bouton = "<h5>Complet</h5>";
+            bouton += "<h5>Complet</h5>";
         }
-
+        
+        callstm.close();
+        callPrix.close();
+        bd.deconnecter();
+        
         return bouton;
     }
 
