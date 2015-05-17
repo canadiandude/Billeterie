@@ -7,6 +7,8 @@ package billets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,6 +38,19 @@ public class Deconnexion extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callstm = bd.prepareCall("{ call PKG_BILLETS.VIDER_PANIER(?) }");
+            callstm.setString(1, (String)request.getSession().getAttribute("client"));
+            callstm.execute();
+            callstm.close();
+            bd.deconnecter();
+        }
+        catch (SQLException e)
+        {
+            response.sendRedirect("erreur.html");
+        }
         request.getSession().invalidate();
         response.sendRedirect("index.html");
     }

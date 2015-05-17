@@ -250,7 +250,7 @@ public class OutilsHTML
                     + "</div>\n"
                     + "                                    <div class=\"AjouterPanier\">\n"
                     + "                                         <form action=\"Acheter\">\n"
-                    +                                                produireBoutonAjouter(rstRep.getInt(1))
+                    + produireBoutonAjouter(rstRep.getInt(1))
                     + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
                     + "                                         </form>\n"
                     + "                                    </div>\n"
@@ -406,9 +406,13 @@ public class OutilsHTML
                 + "                                    <table>\n";
         while (rstSec.next())
         {
+            int places = compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION"));
+            String input = places > 0 ? "<input type=\"number\" name=\"" + rstSec.getInt("NUMSECTION") + "\" min=\"0\" max=\"" + places + "\" onchange=\"CalculerTotal()\" class=\"quantite\">"
+                    : "Complet";
             acheter += ""
                     + "                                        <tr>\n"
-                    + "                                            <td>" + rstSec.getString("NOM") + "</td><td class=\"prix\">" + rstSec.getInt("PRIXSECTION") + "$</td><td><input type=\"number\" name=\"" + rstSec.getInt("NUMSECTION") + "\" min=\"0\" max=\"" + compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION")) + "\" onchange=\"CalculerTotal()\" class=\"quantite\"></td>\n"
+                    + "                                            <td>" + rstSec.getString("NOM") + "</td><td class=\"prix\">" + rstSec.getInt("PRIXSECTION") + "$</td>"
+                    + "                                            <td>" + input + "</td>\n"
                     + "                                            <td><input type=\"hidden\" name=\"sections\" value=\"" + rstSec.getInt("NUMSECTION") + "\"></td>"
                     + "                                        </tr>";
         }
