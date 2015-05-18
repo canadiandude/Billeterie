@@ -76,8 +76,7 @@ public class Authentification extends HttpServlet
             existe = callstm.getInt(1);
             callstm.close();
             bd.deconnecter();
-        } 
-        catch (SQLException sqle)
+        } catch (SQLException sqle)
         {
             response.sendRedirect("erreur.html");
         }
@@ -87,9 +86,17 @@ public class Authentification extends HttpServlet
             if (existe != 0)
             {
                 request.getSession().setAttribute("client", request.getParameter("email"));
-                response.sendRedirect("Panier");
-            } 
-            else
+                if ((String) request.getSession().getAttribute("redirect") != null)
+                {
+                    String redirect = (String) request.getSession().getAttribute("redirect");
+                    request.getSession().setAttribute("redirect", null);
+                    response.sendRedirect("Acheter?representation=" + redirect);
+                } else
+                {
+                    response.sendRedirect("Panier");
+                }
+
+            } else
             {
                 response.setContentType("text/html;charset=UTF-8");
                 OutilsHTML html = new OutilsHTML(out);

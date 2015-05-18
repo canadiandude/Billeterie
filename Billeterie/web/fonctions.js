@@ -30,13 +30,9 @@ function CalculerTotal() {
 function Rechercher() {
     var formCB = document.getElementById("formCB");
     if (formCB !== null) {
-        alert("FORM CHECKBOX");
-        alert("from text box : " + document.getElementById("recherche_textbox").value);
         document.getElementById("cbtext").value = document.getElementById("recherche_textbox").value;
-        alert("from hidden : " + document.getElementById("cbtext").value);
         formCB.submit();
     }else {
-        alert("FORM TEXT");
         document.getElementById("formText").submit();
     }
 }

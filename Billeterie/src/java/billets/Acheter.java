@@ -28,7 +28,7 @@ import oracle.jdbc.OracleTypes;
 })
 public class Acheter extends HttpServlet
 {
-
+    String redirect = null;
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -48,6 +48,7 @@ public class Acheter extends HttpServlet
             CallableStatement callRep = bd.prepareCall("{ ?= call PKG_BILLETS.GET_INFO_REPRESENTATION(?) }");
             callRep.registerOutParameter(1, OracleTypes.CURSOR);
             callRep.setInt(2, Integer.parseInt(request.getParameter("representation")));
+            redirect = request.getParameter("representation");
             callRep.execute();
             ResultSet rstRep = (ResultSet) callRep.getObject(1);
             rstRep.next();
@@ -121,6 +122,7 @@ public class Acheter extends HttpServlet
             response.sendRedirect("Panier");
         } else
         {
+            request.getSession().setAttribute("redirect", redirect);
             response.sendRedirect("Authentification");
         }
 

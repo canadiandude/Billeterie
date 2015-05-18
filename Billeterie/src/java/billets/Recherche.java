@@ -119,7 +119,6 @@ public class Recherche extends HttpServlet
             OutilsHTML html = new OutilsHTML(out);
 
             html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
-            out.println("Cookie : " + params);
             try
             {
                 String RechercheText = request.getParameter("recherche");
