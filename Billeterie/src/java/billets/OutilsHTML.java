@@ -236,28 +236,31 @@ public class OutilsHTML
         //Representation
         while (rstRep.next())
         {
-            String date = rstRep.getString(6);
-            date = date.substring(0, date.lastIndexOf(":"));
-            page += ""
-                    + "                            <tr class=\"Spectacle\">\n"
-                    + "                                <td style=\"width: 100px\" >\n"
-                    + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
-                    + "                                </td>\n"
-                    + "                                <td>\n"
-                    + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
-                    + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
-                    + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
-                    + "                                    <div class=\"DateSpectacle\">"
-                    + date
-                    + "</div>\n"
-                    + "                                    <div class=\"AjouterPanier\">\n"
-                    + "                                         <form action=\"Acheter\">\n"
-                    + produireBoutonAjouter(rstRep.getInt(1))
-                    + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
-                    + "                                         </form>\n"
-                    + "                                    </div>\n"
-                    + "                                </td>\n"
-                    + "                            </tr>\n";
+            if (estDansLaRecherche(rstRep.getString(5), rstRep.getString(2), request))
+            {
+                String date = rstRep.getString(6);
+                date = date.substring(0, date.lastIndexOf(":"));
+                page += ""
+                        + "                            <tr class=\"Spectacle\">\n"
+                        + "                                <td style=\"width: 100px\" >\n"
+                        + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
+                        + "                                </td>\n"
+                        + "                                <td>\n"
+                        + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
+                        + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
+                        + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
+                        + "                                    <div class=\"DateSpectacle\">"
+                        + date
+                        + "</div>\n"
+                        + "                                    <div class=\"AjouterPanier\">\n"
+                        + "                                         <form action=\"Acheter\">\n"
+                        + produireBoutonAjouter(rstRep.getInt(1))
+                        + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
+                        + "                                         </form>\n"
+                        + "                                    </div>\n"
+                        + "                                </td>\n"
+                        + "                            </tr>\n";
+            }
         }
         //Fermeture de representation
         page += "       </table>\n"
@@ -267,8 +270,8 @@ public class OutilsHTML
                 + "        </table>";
         return page;
     }
-    
-        public static String produireTableauRecherche(ResultSet rstRep, String params) throws SQLException
+
+    public static String produireTableauRecherche(ResultSet rstRep, String params) throws SQLException
     {
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
@@ -284,28 +287,31 @@ public class OutilsHTML
         //Representation
         while (rstRep.next())
         {
-            String date = rstRep.getString(6);
-            date = date.substring(0, date.lastIndexOf(":"));
-            page += ""
-                    + "                            <tr class=\"Spectacle\">\n"
-                    + "                                <td style=\"width: 100px\" >\n"
-                    + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
-                    + "                                </td>\n"
-                    + "                                <td>\n"
-                    + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
-                    + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
-                    + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
-                    + "                                    <div class=\"DateSpectacle\">"
-                    + date
-                    + "</div>\n"
-                    + "                                    <div class=\"AjouterPanier\">\n"
-                    + "                                         <form action=\"Acheter\">\n"
-                    + produireBoutonAjouter(rstRep.getInt(1))
-                    + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
-                    + "                                         </form>\n"
-                    + "                                    </div>\n"
-                    + "                                </td>\n"
-                    + "                            </tr>\n";
+            if (estDansLaRecherche(rstRep.getString(5), rstRep.getString(2), params))
+            {
+                String date = rstRep.getString(6);
+                date = date.substring(0, date.lastIndexOf(":"));
+                page += ""
+                        + "                            <tr class=\"Spectacle\">\n"
+                        + "                                <td style=\"width: 100px\" >\n"
+                        + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
+                        + "                                </td>\n"
+                        + "                                <td>\n"
+                        + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
+                        + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
+                        + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
+                        + "                                    <div class=\"DateSpectacle\">"
+                        + date
+                        + "</div>\n"
+                        + "                                    <div class=\"AjouterPanier\">\n"
+                        + "                                         <form action=\"Acheter\">\n"
+                        + produireBoutonAjouter(rstRep.getInt(1))
+                        + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
+                        + "                                         </form>\n"
+                        + "                                    </div>\n"
+                        + "                                </td>\n"
+                        + "                            </tr>\n";
+            }
         }
         //Fermeture de representation
         page += "       </table>\n"
@@ -315,7 +321,17 @@ public class OutilsHTML
                 + "        </table>";
         return page;
     }
-    
+
+    private static boolean estDansLaRecherche(String categorie, String salle, HttpServletRequest request)
+    {
+        return request.getParameter(categorie) != null && request.getParameter(salle) != null;
+    }
+
+    private static boolean estDansLaRecherche(String categorie, String salle, String params)
+    {
+        return params.contains(categorie) && params.contains(salle);
+    }
+
     private static String produireBoutonAjouter(int numrep)
             throws SQLException
     {
