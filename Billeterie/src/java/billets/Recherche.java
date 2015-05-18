@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,12 +46,24 @@ public class Recherche extends HttpServlet
         try (PrintWriter out = response.getWriter())
         {
             OutilsHTML html = new OutilsHTML(out);
-            
+
             html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
-            
+
+            Cookie[] tabCookies = request.getCookies();
+            if (tabCookies != null)
+            {
+                for (Cookie c : tabCookies)
+                {
+                    if (c.getName().equals("params"))
+                    {
+                        out.println("Params recherche :  " + c.getValue());
+                    }
+                }
+            }
+
             try
             {
-                String RechercheText  = request.getParameter("recherche");
+                String RechercheText = request.getParameter("recherche");
                 ConnexionOracle bd = new ConnexionOracle();
                 CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
                 callstm.registerOutParameter(1, OracleTypes.CURSOR);
@@ -61,14 +74,13 @@ public class Recherche extends HttpServlet
                 callstm.setString(2, RechercheText);
                 callstm.execute();
                 ResultSet rest = (ResultSet) callstm.getObject(1);
-                out.println(produireTableauRecherche(rest,request));
+                out.println(produireTableauRecherche(rest, request));
                 callstm.close();
-                bd.deconnecter();                 
-            }
-            catch (SQLException ex)
+                bd.deconnecter();
+            } catch (SQLException ex)
             {
                 response.sendRedirect("erreur.html");
-            }            
+            }
             //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
             //out.println(request.getParameter("recherche"));            
             html.fermerHTML();
@@ -88,7 +100,50 @@ public class Recherche extends HttpServlet
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        processRequest(request, response);
+        Cookie[] tabCookies = request.getCookies();
+        String params = "";
+        if (tabCookies != null)
+        {
+            for (Cookie c : tabCookies)
+            {
+                if (c.getName().equals("params"))
+                {
+                    params = c.getValue();
+                }
+            }
+        }
+
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter())
+        {
+            OutilsHTML html = new OutilsHTML(out);
+
+            html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
+            out.println("Cookie : " + params);
+            try
+            {
+                String RechercheText = request.getParameter("recherche");
+                ConnexionOracle bd = new ConnexionOracle();
+                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);
+                //if (RechercheText == null)
+                //{
+                //    RechercheText = "*";
+                //}                    
+                callstm.setString(2, RechercheText);
+                callstm.execute();
+                ResultSet rest = (ResultSet) callstm.getObject(1);
+                out.println(produireTableauRecherche(rest, params));
+                callstm.close();
+                bd.deconnecter();
+            } catch (SQLException ex)
+            {
+                response.sendRedirect("erreur.html");
+            }
+            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
+            //out.println(request.getParameter("recherche"));            
+            html.fermerHTML();
+        }
     }
 
     /**
@@ -103,7 +158,38 @@ public class Recherche extends HttpServlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        processRequest(request, response);
+        ecrireCookie(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter())
+        {
+            OutilsHTML html = new OutilsHTML(out);
+
+            html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
+
+            try
+            {
+                String RechercheText = request.getParameter("recherche");
+                ConnexionOracle bd = new ConnexionOracle();
+                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);
+                //if (RechercheText == null)
+                //{
+                //    RechercheText = "*";
+                //}                    
+                callstm.setString(2, RechercheText);
+                callstm.execute();
+                ResultSet rest = (ResultSet) callstm.getObject(1);
+                out.println(produireTableauRecherche(rest, request));
+                callstm.close();
+                bd.deconnecter();
+            } catch (SQLException ex)
+            {
+                response.sendRedirect("erreur.html");
+            }
+            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
+            //out.println(request.getParameter("recherche"));            
+            html.fermerHTML();
+        }
     }
 
     /**
@@ -116,5 +202,52 @@ public class Recherche extends HttpServlet
     {
         return "Short description";
     }// </editor-fold>
+
+    private void ecrireCookie(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException
+    {
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
+            callstm.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm.execute();
+            ResultSet restSalles = (ResultSet) callstm.getObject(1);
+
+            CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
+            callstm2.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm2.execute();
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);
+
+            String params = "";
+
+            while (restCategories.next())
+            {
+                if (request.getParameter(restCategories.getString(2)) != null)
+                {
+                    params += restCategories.getString(2) + ",";
+                }
+            }
+
+            while (restSalles.next())
+            {
+                if (request.getParameter(restSalles.getString(2)) != null)
+                {
+                    params += restSalles.getString(2) + ",";
+                }
+            }
+
+            Cookie cookie = new Cookie("params", params);
+            cookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(cookie);
+
+            callstm.close();
+            callstm2.close();
+            bd.deconnecter();
+        } catch (SQLException e)
+        {
+
+        }
+    }
 
 }

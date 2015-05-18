@@ -74,7 +74,7 @@ public class OutilsHTML
                 + "                            <td class=\"MenuTopGauche\">\n"
                 + "                               <form id=\"formText\" action=\"/Billeterie/Recherche\">\n"
                 + "                                   <input class=\"css-input\" type=\"text\" name=\"recherche\" id=\"recherche_textbox\">\n"
-                + "                               </form>\n"                
+                + "                               </form>\n"
                 + "                               <img align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
@@ -225,7 +225,7 @@ public class OutilsHTML
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
-                + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\">"
+                + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\" accept-charset=\"ISO-8859-1\">"
                 + "             <input type=\"hidden\" id=\"cbtext\" name=\"recherche\">\n"
                 + ConstruireCBsection(request)
                 + "             </form>"
@@ -267,7 +267,55 @@ public class OutilsHTML
                 + "        </table>";
         return page;
     }
-
+    
+        public static String produireTableauRecherche(ResultSet rstRep, String params) throws SQLException
+    {
+        //CheckBox
+        String page = "<table style=\"width: 100%\">\n"
+                + "            <tr> \n"
+                + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\" accept-charset=\"ISO-8859-1\">"
+                + "             <input type=\"hidden\" id=\"cbtext\" name=\"recherche\">\n"
+                + ConstruireCBsection(params)
+                + "             </form>"
+                + "                <td>\n"
+                + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
+                + "                    <table class=\"SpectacleSection\">\n"
+                + "                        <!-- Affichage des représentations -->";
+        //Representation
+        while (rstRep.next())
+        {
+            String date = rstRep.getString(6);
+            date = date.substring(0, date.lastIndexOf(":"));
+            page += ""
+                    + "                            <tr class=\"Spectacle\">\n"
+                    + "                                <td style=\"width: 100px\" >\n"
+                    + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
+                    + "                                </td>\n"
+                    + "                                <td>\n"
+                    + "                                    <div class=\"TitreSpectacle\">" + rstRep.getString(3) + "</div><br>\n"
+                    + "                                    <div class=\"NomArtiste\">" + rstRep.getString(4) + "</div>\n"
+                    + "                                    <div class=\"SalleSpectacle\">" + rstRep.getString(2) + "</div>\n"
+                    + "                                    <div class=\"DateSpectacle\">"
+                    + date
+                    + "</div>\n"
+                    + "                                    <div class=\"AjouterPanier\">\n"
+                    + "                                         <form action=\"Acheter\">\n"
+                    + produireBoutonAjouter(rstRep.getInt(1))
+                    + "                                              <input type=\"hidden\" value=\"" + rstRep.getInt(1) + "\" name=\"representation\">\n"
+                    + "                                         </form>\n"
+                    + "                                    </div>\n"
+                    + "                                </td>\n"
+                    + "                            </tr>\n";
+        }
+        //Fermeture de representation
+        page += "       </table>\n"
+                + "                    </div>\n"
+                + "                </td>\n"
+                + "            </tr>\n"
+                + "        </table>";
+        return page;
+    }
+    
     private static String produireBoutonAjouter(int numrep)
             throws SQLException
     {
@@ -281,7 +329,7 @@ public class OutilsHTML
         callPrix.registerOutParameter(1, OracleTypes.NUMBER);
         callPrix.setInt(2, numrep);
         callPrix.execute();
-        
+
         String bouton = "À partir de " + callPrix.getInt(1) + " $ <br/>";
 
         if (callstm.getInt(1) > 0)
@@ -291,11 +339,11 @@ public class OutilsHTML
         {
             bouton += "<h5>Complet</h5>";
         }
-        
+
         callstm.close();
         callPrix.close();
         bd.deconnecter();
-        
+
         return bouton;
     }
 
@@ -341,7 +389,48 @@ public class OutilsHTML
                     + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
             while (restSalles.next())
             {
-                CbSection += ecrireCheckBox(restSalles.getString(2), false, restSalles.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restSalles.getString(2), request.getParameter(restSalles.getString(2)) != null, restSalles.getString(2)) + "</br>";
+            }
+            CbSection += "</br>\n"
+                    + "                </td>\n";
+            callstm.close();
+            callstm2.close();
+            bd.deconnecter();
+        } catch (SQLException ex)
+        {
+            CbSection += ex.getMessage();
+        }
+        return CbSection;
+    }
+
+    public static String ConstruireCBsection(String params)
+    {
+        String CbSection = "";
+        try
+        {
+            ConnexionOracle bd = new ConnexionOracle();
+            CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
+            callstm.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm.execute();
+            ResultSet restSalles = (ResultSet) callstm.getObject(1);
+
+            CallableStatement callstm2 = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_CATEGORIE() }");
+            callstm2.registerOutParameter(1, OracleTypes.CURSOR);
+            callstm2.execute();
+            ResultSet restCategories = (ResultSet) callstm2.getObject(1);
+
+            CbSection = "<td class=\"CBsection\">\n"
+                    + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
+            while (restCategories.next())
+            {
+                CbSection += ecrireCheckBox(restCategories.getString(2), params.contains(restCategories.getString(2)), restCategories.getString(2)) + "</br>";
+            }
+            CbSection += "</br>\n"
+                    + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
+                    + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
+            while (restSalles.next())
+            {
+                CbSection += ecrireCheckBox(restSalles.getString(2), params.contains(restSalles.getString(2)), restSalles.getString(2)) + "</br>";
             }
             CbSection += "</br>\n"
                     + "                </td>\n";
