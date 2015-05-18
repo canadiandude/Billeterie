@@ -66,16 +66,14 @@ public class OutilsHTML
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
                 + produireMenuConnexion(client)
-                //+ "                                <a href=\"/Billeterie/Authentification\" class=\"BoutonBleu\" style=\"margin-bottom:5px\">Connexion</a>\n"
-                //+ "                                <a href=\"/Billeterie/Inscription\" class=\"BoutonBleu\">Inscription</a>\n"
                 + "                            </td>\n"
                 + "                        </tr>\n"
                 + "                        <tr>\n"
                 + "                            <td class=\"MenuTopGauche\">\n"
                 + "                               <form id=\"formText\" action=\"/Billeterie/Recherche\">\n"
                 + "                                   <input class=\"css-input\" type=\"text\" name=\"recherche\" id=\"recherche_textbox\">\n"
+                + "                                   <img align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
                 + "                               </form>\n"
-                + "                               <img align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
                 + "                                <a href=\"/Billeterie/Panier\" style=\"padding-right: 40px;\">\n"
@@ -150,9 +148,9 @@ public class OutilsHTML
         {
             tableau += "<table class=\"PanierItem\">";
             tableau += "<tr>";
-            tableau += "<td rowspan=\"4\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
+            tableau += "<td rowspan=\"4\" align=\"center\" class=\"BordPanier\"><img class=\"affiche\" src=\"" + rst.getString("AFFICHE") + "\"></img></td>";
             tableau += "<td class=\"TitrePanier\">" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "<input type=\"submit\" value=\"X\" onclick=\"SetDelete(" + rst.getInt("NUMACHAT") + ")\" style=\"float:right\"></td>";
-            tableau += "<td rowspan=\"2\" align=\"center\">Quantité <br />";
+            tableau += "<td rowspan=\"2\" align=\"center\" class=\"BordPanier\">Quantité <br />";
             tableau += "<input type=\"number\" min=\"0\" max=\"" + compterPlacesDispo(rst.getInt("QUANTITEBILLETS"), rst.getInt("CODEREPRESENTATION"), rst.getInt("CODESECTION"))
                     + "\" name=\"quantite_" + rst.getInt("NUMACHAT") + "\" onchange=\"SetUpdate();\" value=\"" + rst.getInt("QUANTITEBILLETS") + "\"></td>";
             tableau += "</tr>";
@@ -166,7 +164,7 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
             tableau += "<td align=\"center\">";
-            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer*");
+            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer");
             tableau += "</tr>";
 
             tableau += "<tr>";
@@ -506,7 +504,7 @@ public class OutilsHTML
         acheter += ""
                 + "        <table style=\"margin: auto; margin-top:10px;\">\n"
                 + "            <tr>\n"
-                + "                <td rowspan=\"3\"><img src=\"" + rstRep.getString("AFFICHE") + "\"></td>\n"
+                + "                <td rowspan=\"3\"><img class=\"GrosseAffiche\" src=\"" + rstRep.getString("AFFICHE") + "\"></td>\n"
                 + "                <td>" + rstRep.getString("TITRE") + "<br />" + rstRep.getString("ARTISTE") + "</td>\n"
                 + "            </tr>\n"
                 + "            <tr>\n"
@@ -539,7 +537,7 @@ public class OutilsHTML
                 + "                                <td id=\"total\">Total : 0$</td>\n"
                 + "                            </tr>\n"
                 + "                            <tr>\n"
-                + "                                <td><input type=\"submit\" value=\"Ajouter au panier\"></td>\n"
+                + "                                <td><input type=\"submit\" class=\"BoutonVert\" value=\"Ajouter au panier\"></td>\n"
                 + "                            </tr>\n"
                 + "                        </table>\n"
                 + "                    </form>\n"
