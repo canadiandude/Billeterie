@@ -61,7 +61,7 @@ public class Recherche extends HttpServlet
                 callstm.setString(2, RechercheText);
                 callstm.execute();
                 ResultSet rest = (ResultSet) callstm.getObject(1);
-                out.println(produireTableauRecherche(rest));
+                out.println(produireTableauRecherche(rest,request));
                 callstm.close();
                 bd.deconnecter();                 
             }

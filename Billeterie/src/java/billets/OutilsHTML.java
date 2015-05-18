@@ -9,6 +9,7 @@ import java.io.*;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.servlet.http.HttpServletRequest;
 import oracle.jdbc.OracleTypes;
 
 /**
@@ -71,10 +72,10 @@ public class OutilsHTML
                 + "                        </tr>\n"
                 + "                        <tr>\n"
                 + "                            <td class=\"MenuTopGauche\">\n"
-                + "                               <form action=\"/Billeterie/Recherche\">\n"
-                + "                                   <input class=\"css-input\" type=\"text\" name=\"recherche\">\n"
-                + "                                   <input type=\"image\" align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\">\n"
-                + "                               </form>\n"
+                + "                               <form id=\"formText\" action=\"/Billeterie/Recherche\">\n"
+                + "                                   <input class=\"css-input\" type=\"text\" name=\"recherche\" id=\"recherche_textbox\">\n"
+                + "                               </form>\n"                
+                + "                               <img align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
                 + "                                <a href=\"/Billeterie/Panier\" style=\"padding-right: 40px;\">\n"
@@ -219,13 +220,14 @@ public class OutilsHTML
         out.println("</div>");
     }
 
-    public static String produireTableauRecherche(ResultSet rstRep) throws SQLException
+    public static String produireTableauRecherche(ResultSet rstRep, HttpServletRequest request) throws SQLException
     {
         //CheckBox
         String page = "<table style=\"width: 100%\">\n"
                 + "            <tr> \n"
                 + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\">"
-                + ConstruireCBsection()
+                + "             <input type=\"hidden\" id=\"cbtext\" name=\"recherche\">\n"
+                + ConstruireCBsection(request)
                 + "             </form>"
                 + "                <td>\n"
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
@@ -312,7 +314,7 @@ public class OutilsHTML
         return cb;
     }
 
-    public static String ConstruireCBsection()
+    public static String ConstruireCBsection(HttpServletRequest request)
     {
         String CbSection = "";
         try
@@ -332,7 +334,7 @@ public class OutilsHTML
                     + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
             while (restCategories.next())
             {
-                CbSection += ecrireCheckBox(restCategories.getString(2), (1 > 5), restCategories.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restCategories.getString(2), request.getParameter(restCategories.getString(2)) != null, restCategories.getString(2)) + "</br>";
             }
             CbSection += "</br>\n"
                     + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
