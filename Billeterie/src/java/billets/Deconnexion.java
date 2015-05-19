@@ -1,7 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *          Deconnexion.java
+ *
+ *  Servlet dont la tâche est de déconnecter l'usager.
+ *  À la déconnexion, le panier est vidé.
+ *  
+ *  Auteurs  : François Rioux et Xavier Brosseau   
+ *  Remis le : 20 mai 2015 
+ *  Cours    : 420-KEH-LG Systèmes de gestion de bases de données
+ *             420-KEK-LG Communication en informatique de gestion
+ *
  */
 package billets;
 
@@ -15,10 +22,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Francois
- */
 @WebServlet(name = "Deconnexion", urlPatterns =
 {
     "/Deconnexion"
@@ -27,42 +30,50 @@ public class Deconnexion extends HttpServlet
 {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Appel de Deconnexion par la méthode GET ou POST.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Affiche le formulaire d'achat.
+     *
+     * @param request la requête au servlet
+     * @param response la réponse du servlet
+     *
+     * @throws ServletException si une erreur de servlet se produit.
+     * @throws IOException si une erreur d'entrée/sortie se produit.
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
         try
         {
+            //*** Appel à la base de données ***
             ConnexionOracle bd = new ConnexionOracle();
             CallableStatement callstm = bd.prepareCall("{ call PKG_BILLETS.VIDER_PANIER(?) }");
-            callstm.setString(1, (String)request.getSession().getAttribute("client"));
+            callstm.setString(1, (String) request.getSession().getAttribute("client"));
             callstm.execute();
+            //*** Fermeture de la base de données ***
             callstm.close();
             bd.deconnecter();
-        }
-        catch (SQLException e)
+        } catch (SQLException e)
         {
+            // Redirection en cas d'erreur de base de données
             response.sendRedirect("erreur.html");
         }
+        //*** Fermeture de la session et retour à l'acceuil
         request.getSession().invalidate();
         response.sendRedirect("index.html");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Appel de Deconnexion par la méthode GET.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Appelle la méhode principale.
+     *
+     * @param request la requête au servlet
+     * @param response la réponse du servlet
+     *
+     * @throws ServletException si une erreur de servlet se produit.
+     * @throws IOException si une erreur d'entrée/sortie se produit.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -72,12 +83,15 @@ public class Deconnexion extends HttpServlet
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Appel de Deconnexion par la méthode POST.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Appelle la méhode principale.
+     *
+     * @param request la requête au servlet
+     * @param response la réponse du servlet
+     *
+     * @throws ServletException si une erreur de servlet se produit.
+     * @throws IOException si une erreur d'entrée/sortie se produit.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -87,14 +101,14 @@ public class Deconnexion extends HttpServlet
     }
 
     /**
-     * Returns a short description of the servlet.
+     * Retourne une brève description du servlet.
      *
-     * @return a String containing servlet description
+     * @return un String contenant la description du servlet 
      */
     @Override
     public String getServletInfo()
     {
-        return "Short description";
+        return "Déconnexion de l'usager";
     }// </editor-fold>
 
 }

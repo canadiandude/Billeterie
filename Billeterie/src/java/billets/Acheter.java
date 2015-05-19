@@ -1,7 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *          Acheter.java
+ *
+ *  Servlet dont la tâche est d'afficher un formulaire
+ *  pour l'ajout de billets au panier et de mettre à jour
+ *  la base de données une foit la séléction éffectuée.
+ *  
+ *  Auteurs  : François Rioux et Xavier Brosseau   
+ *  Remis le : 20 mai 2015 
+ *  Cours    : 420-KEH-LG Systèmes de gestion de bases de données
+ *             420-KEK-LG Communication en informatique de gestion
+ *
  */
 package billets;
 
@@ -18,33 +26,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import oracle.jdbc.OracleTypes;
 
-/**
- *
- * @author Francois
- */
 @WebServlet(name = "Acheter", urlPatterns =
 {
     "/Acheter"
 })
 public class Acheter extends HttpServlet
 {
+    // Le numéro de la représentation. Utilisé pour
+    // restaurer la page après la connexion de l'usager
+    // si celui-ci n'était pas connecté au moment de l'ajout
     String redirect = null;
+
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Appel de Acheter par la méthode GET.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Affiche le formulaire d'achat.
+     *
+     * @param request la requête au servlet
+     * @param response la réponse du servlet
+     *
+     * @throws ServletException si une erreur de servlet se produit.
+     * @throws IOException si une erreur d'entrée/sortie se produit.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        // Le formulaire
         String acheter = "";
+
         try
         {
+            //*** Appel à la base de données ***
             ConnexionOracle bd = new ConnexionOracle();
+            // Informations sur la représentation voulue par le client
             CallableStatement callRep = bd.prepareCall("{ ?= call PKG_BILLETS.GET_INFO_REPRESENTATION(?) }");
             callRep.registerOutParameter(1, OracleTypes.CURSOR);
             callRep.setInt(2, Integer.parseInt(request.getParameter("representation")));
@@ -52,21 +67,26 @@ public class Acheter extends HttpServlet
             callRep.execute();
             ResultSet rstRep = (ResultSet) callRep.getObject(1);
             rstRep.next();
-
+            // Informations sur les sections, pour connaitre le nombre de places disponibles
             CallableStatement callSec = bd.prepareCall("{ ?= call PKG_BILLETS.GET_INFO_SECTIONS(?)}");
             callSec.registerOutParameter(1, OracleTypes.CURSOR);
             callSec.setString(2, rstRep.getString("NOMSALLE"));
             callSec.execute();
 
+            //*** Écriture du formulaire ***
             acheter = OutilsHTML.produireFormAcheter(rstRep, (ResultSet) callSec.getObject(1));
+
+            //*** Fermeture de la base de données ***
             callRep.close();
             callSec.close();
             bd.deconnecter();
         } catch (SQLException sqle)
         {
+            // Redirection en cas d'erreur de base de données
             response.sendRedirect("erreur.html");
         }
 
+        //*** Envoi du formulaire au client ***
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter())
         {
@@ -78,30 +98,39 @@ public class Acheter extends HttpServlet
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Appel de Acheter par la méthode POST.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Ajoute l'achat au panier si l'usager est connecté, sinon il est redirigé
+     * vers la page de connexion.
+     *
+     * @param request la requête au servlet
+     * @param response la réponse du servlet
+     *
+     * @throws ServletException si une erreur de servlet se produit.
+     * @throws IOException si une erreur d'entrée/sortie se produit.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        //*** Récupération des informations du client ***
         String client = (String) request.getSession().getAttribute("client");
         if (client != null)
         {
             try
             {
+                //*** Connexion à la base de données ***
                 ConnexionOracle bd = new ConnexionOracle();
 
+                //*** Récupération des numéros des sections ***
                 String[] sections = request.getParameterValues("sections");
                 for (String section : sections)
                 {
+                    //*** Récupération des quantité de billets pour chaque section ***
                     String quantite = request.getParameter(section);
                     if (quantite != null && !quantite.isEmpty() && !quantite.equals("0"))
                     {
+                        //*** Insertion dans la base de données ***
                         CallableStatement callstm = bd.prepareCall("{ call PKG_BILLETS.INSERT_ACHAT(?,?,?,?,?,?) }");
                         callstm.setInt(1, Integer.parseInt(request.getParameter("representation")));
                         callstm.setInt(2, Integer.parseInt(section));
@@ -113,31 +142,32 @@ public class Acheter extends HttpServlet
                         callstm.close();
                     }
                 }
-                 bd.deconnecter();
+                //*** Fermeture de la base de données ***
+                bd.deconnecter();
             } catch (SQLException e)
             {
+                // Redirection en cas d'erreur de base de données
                 response.sendRedirect("erreur.html");
             }
-            
+
+            //*** Redirection vers le panier ***
             response.sendRedirect("Panier");
         } else
         {
+            //*** L'usager n'est pas connecté, redirection vers la connexion ***
             request.getSession().setAttribute("redirect", redirect);
             response.sendRedirect("Authentification");
         }
-
     }
 
     /**
-     * Returns a short description of the servlet.
+     * Retourne une brève description du servlet.
      *
-     * @return a String containing servlet description
+     * @return un String contenant la description du servlet 
      */
     @Override
     public String getServletInfo()
     {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Ajout de billets au panier";
+    }
 }
-

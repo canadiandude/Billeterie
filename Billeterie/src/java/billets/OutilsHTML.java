@@ -1,7 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *          OutilsHTML.java
+ *
+ *  Classe qui gère le code HTML pour tous les servlets 
+ *  du package billets
+ *  
+ *  Crée par    : Saliha Yacoub
+ *  Modifié par : François Rioux et Xavier Brosseau   
+ *  Remis le    : 20 mai 2015 
+ *  Cours       : 420-KEH-LG Systèmes de gestion de bases de données
+ *                420-KEK-LG Communication en informatique de gestion
+ *
  */
 package billets;
 
@@ -12,13 +20,10 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 import oracle.jdbc.OracleTypes;
 
-/**
- *
- * @author Francois
- */
 public class OutilsHTML
 {
 
+    // Le flux de sortie vers le client
     private PrintWriter out;
 
     public OutilsHTML(PrintWriter pw)
@@ -26,6 +31,14 @@ public class OutilsHTML
         out = pw;
     }
 
+    /**
+     * ouvrirHTML.
+     *
+     * Écrit l'entête du document HTML et produit la barre de navigation.
+     *
+     * @param titre le titre de la page
+     * @param client le client présentement connecté
+     */
     public void ouvrirHTML(String titre, String client)
     {
         out.println("<!DOCTYPE html>");
@@ -38,20 +51,32 @@ public class OutilsHTML
         out.println("<script src=\"fonctions.js\"></script>");
         out.println("</head>");
         out.println("<body>");
-        produireEntete(titre, client);
+        produireEntete(client);
     }
 
+    /**
+     * fermerHTML
+     *
+     * Ferme le document HTML.
+     */
     public void fermerHTML()
     {
         out.println("</body>");
         out.println("</html>");
     }
 
-    private void produireEntete(String titre, String client)
+    /**
+     * produireEntete
+     *
+     * Produit la barre de navigation contenant la barre de recherche. Si un
+     * usager est connecté, son nom et un bouton de déconnection sont affichés
+     * Sinon, les boutons connexion et inscription sont disponibles
+     *
+     * @param client le client présentement connecté
+     */
+    private void produireEntete(String client)
     {
         out.println("<table class=\"TopMenu\" width=\"100%\">");
-        //out.println("<a href='/Billeterie/Authentification'>Connexion</a>");
-        //out.println("<a href='/Billeterie/Panier'>Panier</a>");
         out.println("<tr class=\"TopMenu\">                    \n"
                 + "                <td>\n"
                 + "                    <img style=\"display: block;\n"
@@ -87,6 +112,15 @@ public class OutilsHTML
         out.println("</table>");
     }
 
+    /**
+     * produireMenuConnexion
+     *
+     * Si un usager est connecté, écrit son nom et un bouton de déconnexion dans
+     * la barre de navigation. Sinon, ils sont replacés par les boutons
+     * connexion et inscription.
+     *
+     * @param client le client présentement connecté
+     */
     private String produireMenuConnexion(String client)
     {
         String menu = "";
@@ -104,6 +138,11 @@ public class OutilsHTML
         return menu;
     }
 
+    /**
+     * produireFormAuthentification
+     *
+     * Produit le formulaire de connexion des usagers
+     */
     public void produireFormAuthentification()
     {
         out.println("<form method=\"post\" action=\"Authentification\">");
@@ -123,6 +162,11 @@ public class OutilsHTML
         out.println("</form>");
     }
 
+    /**
+     * produireFormInscription
+     *
+     * Produit le formulaire d'inscription des usagers
+     */
     public void produireFormInscription()
     {
         out.println(""
@@ -140,6 +184,17 @@ public class OutilsHTML
                 + "</form>");
     }
 
+    /**
+     * produireTableauPanier
+     *
+     * Produit le panier du client
+     *
+     * @param rst le ResultSet contenant le panier
+     *
+     * @return un tableau HTML représentant le panier ou la chaine "VIDE"
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     public static String produireTableauPanier(ResultSet rst) throws SQLException
     {
         String tableau = "";
@@ -185,22 +240,48 @@ public class OutilsHTML
         return tableau;
     }
 
+    /**
+     * compterPlacesDispo
+     *
+     * Compte le nombre de places disponibles pour une section et une
+     * représentation données
+     *
+     * @param quantite une quantité de départ, si le client possède déjà des
+     * billets
+     * @param rep le numéro de représentation
+     * @param section le numéro de section
+     *
+     * @return le nombre de places disponibles au total
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     private static int compterPlacesDispo(int quantite, int rep, int section)
             throws SQLException
     {
         int places = quantite;
+        //*** Appel à la base de données ***
         ConnexionOracle bd = new ConnexionOracle();
         CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.PLACES_DISPO(?,?) }");
         callstm.registerOutParameter(1, OracleTypes.NUMBER);
         callstm.setInt(2, rep);
         callstm.setInt(3, section);
         callstm.execute();
+        //*** Calcul du nombre de places
         places += callstm.getInt(1);
+        //*** Fermeture de la base de données ***
         callstm.close();
         bd.deconnecter();
+
         return places;
     }
 
+    /**
+     * afficherPanier
+     *
+     * Crée le corps du document HTML contenant le panier
+     *
+     * @param panier le panier à afficher
+     */
     public void afficherPanier(String panier)
     {
         out.println("<div class=\"framePanier\" align=\"center\">");
@@ -218,6 +299,19 @@ public class OutilsHTML
         out.println("</div>");
     }
 
+    /**
+     * produireTableauRecherche
+     *
+     * Produit le tableau HTML contenant les résultats de la recherche en se
+     * fiant aux préférences contenues dans la requête
+     *
+     * @param rstRep le ResultSet contenant les spectacles
+     * @param request la requête qui contient les préférences de recherche
+     *
+     * @return Le tableau HTML de la recherche
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     public static String produireTableauRecherche(ResultSet rstRep, HttpServletRequest request) throws SQLException
     {
         //CheckBox
@@ -239,7 +333,7 @@ public class OutilsHTML
             {
                 String date = rstRep.getString(6);
                 date = date.substring(0, date.lastIndexOf(":"));
-    resultatSpectacle += ""
+                resultatSpectacle += ""
                         + "                            <tr class=\"Spectacle\">\n"
                         + "                                <td style=\"width: 100px\" >\n"
                         + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
@@ -263,16 +357,17 @@ public class OutilsHTML
         }
         //Fermeture de representation
         if (!resultatSpectacle.equals(""))
+        {
             page += resultatSpectacle;
-        else
+        } else
         {
             page += "<tr class=\"Spectacle\" style=\"text-align: center;\">\n"
                     + "<td>"
-                    +"<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
-                    +"<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
+                    + "<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
+                    + "<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
                     + "<td/>"
                     + "<tr/>";
-                    
+
         }
         page += "       </table>\n"
                 + "                    </div>\n"
@@ -282,6 +377,19 @@ public class OutilsHTML
         return page;
     }
 
+    /**
+     * produireTableauRecherche
+     *
+     * Produit le tableau HTML contenant les résultats de la recherche en se
+     * fiant aux préférences contenues dans un cookie
+     *
+     * @param rstRep le ResultSet contenant les spectacles
+     * @param params Les préférences de recherche provenant du cookie
+     *
+     * @return Le tableau HTML de la recherche
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     public static String produireTableauRecherche(ResultSet rstRep, String params) throws SQLException
     {
         //CheckBox
@@ -296,7 +404,7 @@ public class OutilsHTML
                 + "                    <table class=\"SpectacleSection\">\n"
                 + "                        <!-- Affichage des représentations -->";
         String resultatSpectacle = "";
-        
+
         //Representation
         while (rstRep.next())
         {
@@ -328,16 +436,17 @@ public class OutilsHTML
         }
         //Fermeture de representation
         if (!resultatSpectacle.equals(""))
+        {
             page += resultatSpectacle;
-        else
+        } else
         {
             page += "<tr class=\"Spectacle\" style=\"text-align: center;\">\n"
                     + "<td>"
-                    +"<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
-                    +"<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
+                    + "<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
+                    + "<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
                     + "<td/>"
                     + "<tr/>";
-                    
+
         }
         page += "       </table>\n"
                 + "                    </div>\n"
@@ -347,19 +456,58 @@ public class OutilsHTML
         return page;
     }
 
+    /**
+     * estDansLaRecherche
+     *
+     * Vérifie si une représentation correspond aux critères de recherche
+     * contenus dans la requête
+     *
+     * @param categorie la catégorie du spectacle
+     * @param salle la salle du spectacle
+     * @param request la requête qui contient les préférences de recherche
+     *
+     * @return vrai si le spectacle correspond aux critères de recherche, faux
+     * sinon
+     */
     private static boolean estDansLaRecherche(String categorie, String salle, HttpServletRequest request)
     {
         return request.getParameter(categorie) != null && request.getParameter(salle) != null;
     }
 
+    /**
+     * estDansLaRecherche
+     *
+     * Vérifie si une représentation correspond aux critères de recherche
+     * contenus dans un cookie
+     *
+     * @param categorie la catégorie du spectacle
+     * @param salle la salle du spectacle
+     * @param params Les préférences de recherche provenant du cookie
+     *
+     * @return vrai si le spectacle correspond aux critères de recherche, faux
+     * sinon
+     */
     private static boolean estDansLaRecherche(String categorie, String salle, String params)
     {
         return params.contains(categorie) && params.contains(salle);
     }
 
+    /**
+     * produireBoutonAjouter
+     *
+     * Vérifie s'il reste des places pour une représentation donnée. Si oui, il
+     * crée un bouton pour acheter, sinon un indicateur complet
+     *
+     * @param numrep le numéro de représentation
+     *
+     * @return Le bouton ou un indicateur complet
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     private static String produireBoutonAjouter(int numrep)
             throws SQLException
     {
+        //*** Appel à la base de données ***
         ConnexionOracle bd = new ConnexionOracle();
         CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.TOTAL_PLACES_DISPO(?) }");
         callstm.registerOutParameter(1, OracleTypes.NUMBER);
@@ -381,6 +529,7 @@ public class OutilsHTML
             bouton += "<h5>Complet</h5>";
         }
 
+        //*** Fermeture de la base de données ***
         callstm.close();
         callPrix.close();
         bd.deconnecter();
@@ -388,6 +537,17 @@ public class OutilsHTML
         return bouton;
     }
 
+    /**
+     * ecrireCheckBox
+     *
+     * Crée un input de type checkox
+     *
+     * @param name le name du input
+     * @param checked si le checkbox doit être coché
+     * @param label le label qui accompagne le checkbox
+     *
+     * @return le checkbox et son label
+     */
     private static String ecrireCheckBox(String name, boolean checked, String label)
     {
         String cb = "<input type=\"checkbox\" name=\"" + name + "\" id=\"" + name + "\" onchange=\"SetUpdate();\"";
@@ -403,11 +563,21 @@ public class OutilsHTML
         return cb;
     }
 
+    /**
+     * ConstruireCBsection
+     *
+     * Produit la section où l'usager peut choisir ses préférences de recherche
+     * Vérifie dans la requête si un checkbox doit être coché
+     *
+     * @param request la requête qui contient les préférences de recherche
+     * @return le menu contenant les checkbox
+     */
     public static String ConstruireCBsection(HttpServletRequest request)
     {
         String CbSection = "";
         try
         {
+            //*** Appel à la base de données ***
             ConnexionOracle bd = new ConnexionOracle();
             CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
             callstm.registerOutParameter(1, OracleTypes.CURSOR);
@@ -434,6 +604,8 @@ public class OutilsHTML
             }
             CbSection += "</br>\n"
                     + "                </td>\n";
+
+            //*** Fermeture de la base de données ***
             callstm.close();
             callstm2.close();
             bd.deconnecter();
@@ -444,11 +616,21 @@ public class OutilsHTML
         return CbSection;
     }
 
+    /**
+     * ConstruireCBsection
+     *
+     * Produit la section où l'usager peut choisir ses préférences de recherche
+     * Vérifie dans un cookie si un checkbox doit être coché
+     *
+     * @param params Les préférences de recherche provenant du cookie
+     * @return le menu contenant les checkbox
+     */
     public static String ConstruireCBsection(String params)
     {
         String CbSection = "";
         try
         {
+            //*** Appel à la base de données ***
             ConnexionOracle bd = new ConnexionOracle();
             CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_SALLE() }");
             callstm.registerOutParameter(1, OracleTypes.CURSOR);
@@ -475,6 +657,8 @@ public class OutilsHTML
             }
             CbSection += "</br>\n"
                     + "                </td>\n";
+
+            //*** Fermeture de la base de données ***
             callstm.close();
             callstm2.close();
             bd.deconnecter();
@@ -485,6 +669,17 @@ public class OutilsHTML
         return CbSection;
     }
 
+    /**
+     * produireFacture
+     *
+     * Produit le tableau HTML contenant la facure
+     *
+     * @param rst le ResultSet contenant la facture
+     *
+     * @return le tableau HTML contenant la facure
+     *
+     * @throws SQLException si une erreur de base de données survient
+     */
     public static String produireFacture(ResultSet rst)
             throws SQLException
     {
@@ -515,13 +710,32 @@ public class OutilsHTML
         return facture;
     }
 
+    /**
+     * afficherPanier
+     *
+     * Crée le corps du document HTML contenant le panier
+     *
+     * @param facture la facture à afficher
+     */
     public void afficherFacture(String facture)
     {
         out.println("<div class=\"framePanier\" align=\"center\">");
         out.println(facture);
         out.println("</div>");
     }
-
+    
+    /**
+     * produireFormAcheter
+     * 
+     * Produit le formulaire permettant d'ajouter des billets au panier
+     * 
+     * @param rstRep le ResultSet contennant le spectacle
+     * @param rstSec le ResultSet contennant les sections
+     * 
+     * @return le formulaire d'ajout de billets
+     * 
+     * @throws SQLException si une erreur de base de données survient
+     */
     public static String produireFormAcheter(ResultSet rstRep, ResultSet rstSec)
             throws SQLException
     {
