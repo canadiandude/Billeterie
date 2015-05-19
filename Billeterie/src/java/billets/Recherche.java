@@ -30,57 +30,6 @@ import oracle.jdbc.OracleTypes;
 public class Recherche extends HttpServlet
 {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter())
-        {
-            OutilsHTML html = new OutilsHTML(out);
-
-            html.ouvrirHTML("Recherche", (String) request.getSession().getAttribute("client"));
-
-            Cookie[] tabCookies = request.getCookies();
-            if (tabCookies != null)
-            {
-                for (Cookie c : tabCookies)
-                {
-                    if (c.getName().equals("params"))
-                    {
-                        out.println("Params recherche :  " + c.getValue());
-                    }
-                }
-            }
-
-            try
-            {
-                String RechercheText = request.getParameter("recherche");
-                ConnexionOracle bd = new ConnexionOracle();
-                CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
-                callstm.registerOutParameter(1, OracleTypes.CURSOR);                  
-                callstm.setString(2, RechercheText);
-                callstm.execute();
-                ResultSet rest = (ResultSet) callstm.getObject(1);
-                out.println(produireTableauRecherche(rest, request));
-                callstm.close();
-                bd.deconnecter();
-            } catch (SQLException ex)
-            {
-                response.sendRedirect("erreur.html");
-            }      
-            html.fermerHTML();
-        }
-    }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

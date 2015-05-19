@@ -231,6 +231,7 @@ public class OutilsHTML
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
                 + "                        <!-- Affichage des représentations -->";
+        String resultatSpectacle = "";
         //Representation
         while (rstRep.next())
         {
@@ -238,7 +239,7 @@ public class OutilsHTML
             {
                 String date = rstRep.getString(6);
                 date = date.substring(0, date.lastIndexOf(":"));
-                page += ""
+    resultatSpectacle += ""
                         + "                            <tr class=\"Spectacle\">\n"
                         + "                                <td style=\"width: 100px\" >\n"
                         + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
@@ -261,6 +262,18 @@ public class OutilsHTML
             }
         }
         //Fermeture de representation
+        if (!resultatSpectacle.equals(""))
+            page += resultatSpectacle;
+        else
+        {
+            page += "<tr class=\"Spectacle\" style=\"text-align: center;\">\n"
+                    + "<td>"
+                    +"<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
+                    +"<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
+                    + "<td/>"
+                    + "<tr/>";
+                    
+        }
         page += "       </table>\n"
                 + "                    </div>\n"
                 + "                </td>\n"
@@ -282,6 +295,8 @@ public class OutilsHTML
                 + "                    <div style=\"height: 70vh; overflow:auto;\"><!-- Scroll bar representation -->\n"
                 + "                    <table class=\"SpectacleSection\">\n"
                 + "                        <!-- Affichage des représentations -->";
+        String resultatSpectacle = "";
+        
         //Representation
         while (rstRep.next())
         {
@@ -289,7 +304,7 @@ public class OutilsHTML
             {
                 String date = rstRep.getString(6);
                 date = date.substring(0, date.lastIndexOf(":"));
-                page += ""
+                resultatSpectacle += ""
                         + "                            <tr class=\"Spectacle\">\n"
                         + "                                <td style=\"width: 100px\" >\n"
                         + "                                    <img class=\"affiche\" src=\"" + rstRep.getString(7) + "\">\n"
@@ -312,6 +327,18 @@ public class OutilsHTML
             }
         }
         //Fermeture de representation
+        if (!resultatSpectacle.equals(""))
+            page += resultatSpectacle;
+        else
+        {
+            page += "<tr class=\"Spectacle\" style=\"text-align: center;\">\n"
+                    + "<td>"
+                    +"<h1>Votre recherche n'a pas été fructueuse.. :(<h1>"
+                    +"<div style=\"font-size: 20px;\">Vérifier l'orthographe et/ou cocher des éléments de spécification de recherche<div/>"
+                    + "<td/>"
+                    + "<tr/>";
+                    
+        }
         page += "       </table>\n"
                 + "                    </div>\n"
                 + "                </td>\n"
