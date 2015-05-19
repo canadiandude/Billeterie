@@ -22,9 +22,10 @@ function CalculerTotal() {
     for (var i = 0; i < prix.length; i++) {
         var str = prix[i].innerHTML;
         str = str.replace("$", "");
-        total += str * qte[i].value;
+        if (qte[i].innerHTML !== "Complet")
+            total += str * qte[i].value;
     }
-    document.getElementById("total").innerHTML = total + "$";
+    document.getElementById("total").innerHTML = "Total : " + total + "$";
 }
 
 function Rechercher() {

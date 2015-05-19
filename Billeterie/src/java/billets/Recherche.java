@@ -66,11 +66,7 @@ public class Recherche extends HttpServlet
                 String RechercheText = request.getParameter("recherche");
                 ConnexionOracle bd = new ConnexionOracle();
                 CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
-                callstm.registerOutParameter(1, OracleTypes.CURSOR);
-                //if (RechercheText == null)
-                //{
-                //    RechercheText = "*";
-                //}                    
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);                  
                 callstm.setString(2, RechercheText);
                 callstm.execute();
                 ResultSet rest = (ResultSet) callstm.getObject(1);
@@ -80,9 +76,7 @@ public class Recherche extends HttpServlet
             } catch (SQLException ex)
             {
                 response.sendRedirect("erreur.html");
-            }
-            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            //out.println(request.getParameter("recherche"));            
+            }      
             html.fermerHTML();
         }
     }
@@ -124,11 +118,7 @@ public class Recherche extends HttpServlet
                 String RechercheText = request.getParameter("recherche");
                 ConnexionOracle bd = new ConnexionOracle();
                 CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
-                callstm.registerOutParameter(1, OracleTypes.CURSOR);
-                //if (RechercheText == null)
-                //{
-                //    RechercheText = "*";
-                //}                    
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);                   
                 callstm.setString(2, RechercheText);
                 callstm.execute();
                 ResultSet rest = (ResultSet) callstm.getObject(1);
@@ -138,9 +128,7 @@ public class Recherche extends HttpServlet
             } catch (SQLException ex)
             {
                 response.sendRedirect("erreur.html");
-            }
-            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            //out.println(request.getParameter("recherche"));            
+            }       
             html.fermerHTML();
         }
     }
@@ -170,11 +158,7 @@ public class Recherche extends HttpServlet
                 String RechercheText = request.getParameter("recherche");
                 ConnexionOracle bd = new ConnexionOracle();
                 CallableStatement callstm = bd.prepareCall("{ ?= call PKG_BILLETS.AFFICHER_RESULTATRECHERCHE(?) }");
-                callstm.registerOutParameter(1, OracleTypes.CURSOR);
-                //if (RechercheText == null)
-                //{
-                //    RechercheText = "*";
-                //}                    
+                callstm.registerOutParameter(1, OracleTypes.CURSOR);                 
                 callstm.setString(2, RechercheText);
                 callstm.execute();
                 ResultSet rest = (ResultSet) callstm.getObject(1);
@@ -184,9 +168,7 @@ public class Recherche extends HttpServlet
             } catch (SQLException ex)
             {
                 response.sendRedirect("erreur.html");
-            }
-            //out.println("<h1>Servlet Recherche at " + request.getContextPath() + "</h1>");
-            //out.println(request.getParameter("recherche"));            
+            }        
             html.fermerHTML();
         }
     }
@@ -245,7 +227,7 @@ public class Recherche extends HttpServlet
             bd.deconnecter();
         } catch (SQLException e)
         {
-
+            response.sendRedirect("erreur.html");
         }
     }
 

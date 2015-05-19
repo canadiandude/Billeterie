@@ -72,7 +72,7 @@ public class OutilsHTML
                 + "                            <td class=\"MenuTopGauche\">\n"
                 + "                               <form id=\"formText\" action=\"/Billeterie/Recherche\">\n"
                 + "                                   <input class=\"css-input\" type=\"text\" name=\"recherche\" id=\"recherche_textbox\">\n"
-                + "                                   <img align=\"top\" height=\"43px\" width=\"43px\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
+                + "                                   <img align=\"top\" class=\"BoutonRecherche\" src=\"http://i.imgur.com/Zlb38M3.png\" onclick=\"Rechercher()\">\n"
                 + "                               </form>\n"
                 + "                            </td>\n"
                 + "                            <td class=\"MenuTopDroite\">\n"
@@ -522,7 +522,7 @@ public class OutilsHTML
         {
             int places = compterPlacesDispo(0, rstRep.getInt("NUMREPRESENTATION"), rstSec.getInt("NUMSECTION"));
             String input = places > 0 ? "<input type=\"number\" name=\"" + rstSec.getInt("NUMSECTION") + "\" min=\"0\" max=\"" + places + "\" onchange=\"CalculerTotal()\" class=\"quantite\">"
-                    : "Complet";
+                    : "<p class=\"quantite\">Complet</p>";
             acheter += ""
                     + "                                        <tr>\n"
                     + "                                            <td>" + rstSec.getString("NOM") + "</td><td class=\"prix\">" + rstSec.getInt("PRIXSECTION") + "$</td>"

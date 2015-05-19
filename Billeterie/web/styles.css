@@ -207,6 +207,15 @@ input[type=number]{
 	top:1px;
 }
 
+.BoutonRecherche {
+    height:43px;
+    width:43px;
+}
+
+.BoutonRecherche:hover {
+    cursor:pointer;
+}
+
 .Facture {
     text-align: center;
     width: 100%
