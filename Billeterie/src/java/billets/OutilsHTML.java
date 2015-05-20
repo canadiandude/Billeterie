@@ -219,7 +219,7 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
             tableau += "<td align=\"center\">";
-            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer");
+            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer*");
             tableau += "</tr>";
 
             tableau += "<tr>";
@@ -290,6 +290,7 @@ public class OutilsHTML
             out.println("<form id=\"formPanier\" method=\"post\" action=\"Facture\">");
             out.println("<input type=\"hidden\" name=\"delete\">");
             out.println(panier);
+            out.println("<h5>*Des frais de 2.00$ sont applicables</h5>");
             out.println("<input id=\"submitPanier\" class=\"BoutonVert\" type=\"submit\" value=\"Payer le panier\">");
             out.println("</form>");
         } else
@@ -687,9 +688,10 @@ public class OutilsHTML
 
         facture
                 += facture += "<table class=\"Facture\">";
-        facture += "<tr><td>Spectacle</td><td>Quantité</td><td>Total</td></tr>";
+        facture += "<tr><td>Spectacle</td><td>Quantité</td><td>Imprimer</td><td>Total</td></tr>";
         int total = 0;
         int billets = 0;
+        int imprimer = 0;
         int nofacture = 0;
         while (rst.next())
         {
@@ -697,12 +699,14 @@ public class OutilsHTML
             facture += "<td>" + rst.getString("TITRE") + " - " + rst.getString("ARTISTE") + "</td>";
             facture += "<td>" + rst.getInt("QUANTITEBILLETS") + "</td>";
             billets += rst.getInt("QUANTITEBILLETS");
+            facture += "<td>" + (rst.getString("IMPRIMER").equals("Y") ? "Oui" : "Non") + "</td>";
+            if (rst.getString("IMPRIMER").equals("Y")) imprimer++;
             facture += "<td>" + rst.getInt("SOUSTOTAL") + " $</td>";
             total += rst.getInt("SOUSTOTAL");
             nofacture = rst.getInt("NUMFACTURE");
         }
 
-        facture += "<tr><td>Total</td><td>" + billets + "</td><td>" + total + " $</td></tr>";
+        facture += "<tr><td>Total</td><td>" + billets + "</td><td>"+imprimer+ " à imprimer</td><td>" + total + " $</td></tr>";
         facture += "</table>";
 
         facture = "<h1>Facture n°" + nofacture + "</h1>" + facture;

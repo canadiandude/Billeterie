@@ -90,6 +90,7 @@ public class Recherche extends HttpServlet
                 bd.deconnecter();
             } catch (SQLException ex)
             {
+                ex.printStackTrace();
                 // Redirection en cas d'erreur de base de données
                 response.sendRedirect("erreur.html");
             }
