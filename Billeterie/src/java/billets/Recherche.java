@@ -188,34 +188,46 @@ public class Recherche extends HttpServlet
             callstm2.registerOutParameter(1, OracleTypes.CURSOR);
             callstm2.execute();
             ResultSet restCategories = (ResultSet) callstm2.getObject(1);
-            
+
             // Les préférences à conserver
             String params = "";
-            
+
             //*** Ajout des catégories ***
-            while (restCategories.next())
+            if (request.getParameter("allCategories").equals("true"))
             {
-                if (request.getParameter(restCategories.getString(2)) != null)
+                params += "allCategories,";
+            } else
+            {
+                while (restCategories.next())
                 {
-                    params += restCategories.getString(2) + ",";
+                    if (request.getParameter(restCategories.getString(2)) != null)
+                    {
+                        params += restCategories.getString(2) + ",";
+                    }
                 }
             }
-            
+
             //*** Ajout des salles ***
-            while (restSalles.next())
+            if (request.getParameter("allSalles").equals("true"))
             {
-                if (request.getParameter(restSalles.getString(2)) != null)
+                params += "allSalles,";
+            } else
+            {
+                while (restSalles.next())
                 {
-                    params += restSalles.getString(2) + ",";
+                    if (request.getParameter(restSalles.getString(2)) != null)
+                    {
+                        params += restSalles.getString(2) + ",";
+                    }
                 }
             }
-            
+
             //*** Envoi du cookie ***
             Cookie cookie = new Cookie("params", params);
             // Durée de vie d'une semaine
             cookie.setMaxAge(7 * 24 * 60 * 60);
             response.addCookie(cookie);
-            
+
             //*** Fermeture de la base de données ***
             callstm.close();
             callstm2.close();

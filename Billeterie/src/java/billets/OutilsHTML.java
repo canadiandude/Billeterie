@@ -219,7 +219,7 @@ public class OutilsHTML
             tableau += "<tr>";
             tableau += "<td>" + rst.getString("NOMSALLE") + "</td>";
             tableau += "<td align=\"center\">";
-            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer*");
+            tableau += ecrireCheckBox("print_" + rst.getInt("NUMACHAT"), rst.getString("IMPRIMER").equals("Y"), "Imprimer*", "cbPanier", "SetUpdate()");
             tableau += "</tr>";
 
             tableau += "<tr>";
@@ -320,6 +320,8 @@ public class OutilsHTML
                 + "            <tr> \n"
                 + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\" accept-charset=\"ISO-8859-1\">"
                 + "             <input type=\"hidden\" id=\"cbtext\" name=\"recherche\">\n"
+                + "             <input type=\"hidden\" id=\"allCategories\" name=\"allCategories\">"
+                + "             <input type=\"hidden\" id=\"allSalles\" name=\"allSalles\">"
                 + ConstruireCBsection(request)
                 + "             </form>"
                 + "                <td>\n"
@@ -375,6 +377,12 @@ public class OutilsHTML
                 + "                </td>\n"
                 + "            </tr>\n"
                 + "        </table>";
+
+        page += "<script type=\"text/javascript\">\n"
+                + " UpdateCategories();\n"
+                + " UpdateSalles();\n"
+                + "</script>\n";
+
         return page;
     }
 
@@ -398,6 +406,8 @@ public class OutilsHTML
                 + "            <tr> \n"
                 + "             <form id=\"formCB\" method=\"post\" action=\"Recherche\" accept-charset=\"ISO-8859-1\">"
                 + "             <input type=\"hidden\" id=\"cbtext\" name=\"recherche\">\n"
+                + "             <input type=\"hidden\" id=\"allCategories\" name=\"allCategories\">"
+                + "             <input type=\"hidden\" id=\"allSalles\" name=\"allSalles\">"
                 + ConstruireCBsection(params)
                 + "             </form>"
                 + "                <td>\n"
@@ -454,6 +464,12 @@ public class OutilsHTML
                 + "                </td>\n"
                 + "            </tr>\n"
                 + "        </table>";
+
+        page += "<script type=\"text/javascript\">\n"
+                + " UpdateCategories();\n"
+                + " UpdateSalles();\n"
+                + "</script>\n";
+
         return page;
     }
 
@@ -472,7 +488,8 @@ public class OutilsHTML
      */
     private static boolean estDansLaRecherche(String categorie, String salle, HttpServletRequest request)
     {
-        return request.getParameter(categorie) != null && request.getParameter(salle) != null;
+        return (request.getParameter("allCategories").equals("true") || request.getParameter(categorie) != null) &&
+               (request.getParameter("allSalles").equals("true") || request.getParameter(salle) != null);
     }
 
     /**
@@ -490,7 +507,8 @@ public class OutilsHTML
      */
     private static boolean estDansLaRecherche(String categorie, String salle, String params)
     {
-        return params.contains(categorie) && params.contains(salle);
+        return (params.contains("allCategories") || params.contains(categorie)) && 
+                (params.contains("allCategories") || params.contains(salle));
     }
 
     /**
@@ -549,9 +567,9 @@ public class OutilsHTML
      *
      * @return le checkbox et son label
      */
-    private static String ecrireCheckBox(String name, boolean checked, String label)
+    private static String ecrireCheckBox(String name, boolean checked, String label, String classe, String function)
     {
-        String cb = "<input type=\"checkbox\" name=\"" + name + "\" id=\"" + name + "\" onchange=\"SetUpdate();\"";
+        String cb = "<input type=\"checkbox\" name=\"" + name + "\" id=\"" + name + "\" class=\"" + classe + "\" onchange=\"" + function + ";\"";
 
         if (checked)
         {
@@ -594,14 +612,14 @@ public class OutilsHTML
                     + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
             while (restCategories.next())
             {
-                CbSection += ecrireCheckBox(restCategories.getString(2), request.getParameter(restCategories.getString(2)) != null, restCategories.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restCategories.getString(2), request.getParameter(restCategories.getString(2)) != null, restCategories.getString(2), "cbCategories", "UpdateCategories()") + "</br>";
             }
             CbSection += "</br>\n"
                     + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
                     + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
             while (restSalles.next())
             {
-                CbSection += ecrireCheckBox(restSalles.getString(2), request.getParameter(restSalles.getString(2)) != null, restSalles.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restSalles.getString(2), request.getParameter(restSalles.getString(2)) != null, restSalles.getString(2), "cbSalles", "UpdateSalles()") + "</br>";
             }
             CbSection += "</br>\n"
                     + "                </td>\n";
@@ -647,14 +665,14 @@ public class OutilsHTML
                     + "                    <div class=\"TitreCB\">TYPE DE SPECTACLE</div>\n";
             while (restCategories.next())
             {
-                CbSection += ecrireCheckBox(restCategories.getString(2), params.contains(restCategories.getString(2)), restCategories.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restCategories.getString(2), params.contains(restCategories.getString(2)), restCategories.getString(2), "cbCategories", "UpdateCategories()") + "</br>";
             }
             CbSection += "</br>\n"
                     + "                    <hr style=\"width:70%\" align=\"left\"></hr>\n"
                     + "                    <div class=\"TitreCB\">SALLE DE SPECTACLE</div>\n";
             while (restSalles.next())
             {
-                CbSection += ecrireCheckBox(restSalles.getString(2), params.contains(restSalles.getString(2)), restSalles.getString(2)) + "</br>";
+                CbSection += ecrireCheckBox(restSalles.getString(2), params.contains(restSalles.getString(2)), restSalles.getString(2), "cbSalles", "UpdateSalles()") + "</br>";
             }
             CbSection += "</br>\n"
                     + "                </td>\n";
@@ -700,13 +718,16 @@ public class OutilsHTML
             facture += "<td>" + rst.getInt("QUANTITEBILLETS") + "</td>";
             billets += rst.getInt("QUANTITEBILLETS");
             facture += "<td>" + (rst.getString("IMPRIMER").equals("Y") ? "Oui" : "Non") + "</td>";
-            if (rst.getString("IMPRIMER").equals("Y")) imprimer++;
+            if (rst.getString("IMPRIMER").equals("Y"))
+            {
+                imprimer++;
+            }
             facture += "<td>" + rst.getInt("SOUSTOTAL") + " $</td>";
             total += rst.getInt("SOUSTOTAL");
             nofacture = rst.getInt("NUMFACTURE");
         }
 
-        facture += "<tr><td>Total</td><td>" + billets + "</td><td>"+imprimer+ " à imprimer</td><td>" + total + " $</td></tr>";
+        facture += "<tr><td>Total</td><td>" + billets + "</td><td>" + imprimer + " à imprimer</td><td>" + total + " $</td></tr>";
         facture += "</table>";
 
         facture = "<h1>Facture n°" + nofacture + "</h1>" + facture;
@@ -727,17 +748,17 @@ public class OutilsHTML
         out.println(facture);
         out.println("</div>");
     }
-    
+
     /**
      * produireFormAcheter
-     * 
+     *
      * Produit le formulaire permettant d'ajouter des billets au panier
-     * 
+     *
      * @param rstRep le ResultSet contennant le spectacle
      * @param rstSec le ResultSet contennant les sections
-     * 
+     *
      * @return le formulaire d'ajout de billets
-     * 
+     *
      * @throws SQLException si une erreur de base de données survient
      */
     public static String produireFormAcheter(ResultSet rstRep, ResultSet rstSec)

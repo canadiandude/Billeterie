@@ -37,3 +37,25 @@ function Rechercher() {
         document.getElementById("formText").submit();
     }
 }
+
+function UpdateCategories() {
+    var checkboxes = document.getElementsByClassName("cbCategories");
+    var allOff = true;
+    
+    for (var i = 0; i < checkboxes.length && allOff; i++) {
+        allOff = !checkboxes[i].checked;
+    }
+    
+    document.getElementById("allCategories").value = allOff;
+}
+
+function UpdateSalles() {
+    var checkboxes = document.getElementsByClassName("cbSalles");
+    var allOff = true;
+    
+    for (var i = 0; i < checkboxes.length && allOff; i++) {
+        allOff = !checkboxes[i].checked;
+    }
+    
+    document.getElementById("allSalles").value = allOff;
+}
